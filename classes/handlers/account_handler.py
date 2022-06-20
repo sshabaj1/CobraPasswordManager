@@ -2,6 +2,7 @@ from classes.handlers.encryption_handler import  EncryptionHandler
 from classes.handlers.log_handler import LogHandler
 from classes.utilities.static_variables import StaticVariables
 from classes.handlers.database_handler import DatabaseHandler
+from classes.handlers.otp_handler import OtpHandler
 
 import sys
 import psycopg2
@@ -88,7 +89,7 @@ class AccountHandler():
 
         q_record_id = rec_id
         q_account_id = acc_id
-        query = ("SELECT * FROM record WHERE account_id = %s AND id = %s")
+        query = "SELECT * FROM record WHERE account_id = %s AND id = %s"
         args = (q_account_id, q_record_id)
         connection_dict = DatabaseHandler.connect_main_database(self)
         conn = connection_dict['connection']
@@ -113,6 +114,78 @@ class AccountHandler():
             
             return record
         
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+            
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+                
+    
+    
+    def get_otp(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        q_username = self.username
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        query = "SELECT otp FROM account WHERE username = '%s'"
+        args = q_username
+        try:
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, args)
+            otp = str((rows[0])[0])
+            
+            LogHandler.info_log(self, function_name, 'OTP', otp)
+            
+            cur.close()
+            conn.close()
+            return otp
+
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+            
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+                
+        
+    
+    def verify_otp(self, n_otp):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        new_otp = n_otp
+        otp = self.get_otp()
+        if new_otp == otp:
+            return True
+        
+    
+    
+    def set_otp(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        q_otp = OtpHandler.create_otp()
+        q_username = self.username
+        
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        update_query = "Update account set otp = %s where username = %s"
+        update_args = [q_otp, q_username]
+        
+        try:
+
+            DatabaseHandler.update(self, conn, cur, update_query, update_args)
+
+            conn.commit()
+            cur.close()
+            conn.close()
+            
         except Exception as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
             
