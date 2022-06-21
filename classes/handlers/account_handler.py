@@ -387,7 +387,7 @@ class AccountHandler():
                 
                 
                 
-    def set_encrypt_key_id(self):
+    def create_encrypt_key_id(self):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
