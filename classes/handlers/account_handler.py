@@ -537,5 +537,23 @@ class AccountHandler():
         
         """
         EmailHandler.send_email(self, self.email, message)
+        
+        
+    
+    
+    def send_otp_change_pass(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.debug_log(self, function_name, '', '')
+
+        message = f"""\
+        Subject: Change Password
+        This is the One time code to change your password
+        
+        code: {self.get_otp()}
+        
+        """
+        
+        EmailHandler.send_email(self, self.email, message)
+
 
         
