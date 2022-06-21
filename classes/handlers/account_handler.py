@@ -616,6 +616,34 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
+                
+                
+    def insert_new_email(self, usern, new_eml):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        username_query = "SELECT * FROM account WHERE username = '%s'"
+        emaill_query = "Update account set email = %s where id = %s"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, username_query, str(usern))
+            q_rec_id = rows[0]
+            DatabaseHandler.update(self, conn, cur, emaill_query, (new_eml, q_rec_id))
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
 
         
 
