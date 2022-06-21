@@ -351,3 +351,36 @@ class AccountHandler():
 
     
     
+    def query_encryption_key(self, acc_id):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        connection_dict = DatabaseHandler.connect_enc_database(self)
+        query = "SELECT * FROM keyHolder WHERE account_id = '%s'"
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+
+        try:
+            
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, acc_id)
+            q_id = (rows[0])[0]
+            q_ac_id = (rows[0])[1]
+            q_key = (rows[0])[2]
+            
+            record = [q_id, q_ac_id, q_key]
+            
+            LogHandler.debug_log(self, function_name, 'record: ', record)
+            
+                    
+            cur.close()
+            conn.close()
+            
+            return record
+        
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
