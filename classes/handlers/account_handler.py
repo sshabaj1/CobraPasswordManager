@@ -1,3 +1,4 @@
+from classes.handlers.email_handler import EmailHandler
 from classes.handlers.encryption_handler import  EncryptionHandler
 from classes.handlers.log_handler import LogHandler
 from classes.utilities.static_variables import StaticVariables
@@ -521,3 +522,20 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
+                
+                
+                
+    def send_otp_change_email(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.debug_log(self, function_name, '', '')
+        
+        message = f"""\
+        Subject: Change Email
+        This is the One time code to change your email
+        
+        code: {self.get_otp()}
+        
+        """
+        EmailHandler.send_email(self, self.email, message)
+
+        
