@@ -452,4 +452,32 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
+                
+                
+    
+    def get_otp(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        query = "SELECT otp FROM account WHERE username = '%s'"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, self.username)
+            otp = str((rows[0])[0])
+
             
+            cur.close()
+            conn.close()
+            
+            return otp
+
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
