@@ -2,7 +2,7 @@ from classes.handlers.encryption_handler import  EncryptionHandler
 from classes.handlers.log_handler import LogHandler
 from classes.utilities.static_variables import StaticVariables
 from classes.handlers.database_handler import DatabaseHandler
-from classes.handlers.otp_handler import OtpHandler
+from classes.handlers.record_handler import  RecordHandler
 
 import sys
 import psycopg2
@@ -121,28 +121,44 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
-                
-    
-    
-    def get_otp(self):
+
+
+        
+    def get_record(self, id, web, usern, eml):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
-        
-        q_username = self.username
+
+        acc_id = int(id)
+        website = web
+        user = usern
+        email = eml
+
         connection_dict = DatabaseHandler.connect_main_database(self)
         conn = connection_dict['connection']
         cur = connection_dict['cursor']
-        query = "SELECT otp FROM account WHERE username = '%s'"
-        args = q_username
+        query = "SELECT * FROM record WHERE account_id = %s AND website = %s AND username = %s AND email = %s"
+        args = (acc_id, website, user, email)
+
+        
         try:
+            
+            
             rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, args)
-            otp = str((rows[0])[0])
+
+            q_id = (rows[0])[0]
+            q_ac_id = (rows[0])[1]
+            q_web = (rows[0])[2]
+            q_usern = (rows[0])[3]
+            q_mail = (rows[0])[4]
+            q_passw = (rows[0])[5]
             
-            LogHandler.info_log(self, function_name, 'OTP', otp)
+            record_returned = [q_id, q_ac_id, q_web, q_usern, q_mail, q_passw]
+            LogHandler.info_log(self, function_name, 'record_returned: ', record_returned)
             
+                    
             cur.close()
             conn.close()
-            return otp
+            return record_returned
 
         except Exception as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
@@ -151,41 +167,74 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
-                
-        
+
+
     
-    def verify_otp(self, n_otp):
+    def query_records_by_account_id(self, id):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
-        
-        new_otp = n_otp
-        otp = self.get_otp()
-        if new_otp == otp:
-            return True
-        
-    
-    
-    def set_otp(self):
-        function_name = sys._getframe().f_code.co_name
-        LogHandler.info_log(self, function_name, '', '')
-        
-        q_otp = OtpHandler.create_otp()
-        q_username = self.username
-        
+
+        acc_id = id
+        query = ("SELECT * FROM record WHERE account_id = %s")
+        args = acc_id
         connection_dict = DatabaseHandler.connect_main_database(self)
         conn = connection_dict['connection']
         cur = connection_dict['cursor']
-        update_query = "Update account set otp = %s where username = %s"
-        update_args = [q_otp, q_username]
-        
+        records = []
+
         try:
+            
+            
+            
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, args)
 
-            DatabaseHandler.update(self, conn, cur, update_query, update_args)
+            LogHandler.debug_log(self, function_name, 'rows lenght', len(rows))
 
-            conn.commit()
+            if len(rows) > 1:
+                for i in range(len(rows)):
+
+                    LogHandler.debug_log(self, function_name, 'Enterd in loop: ', i)
+
+                    idi = (rows[i])[0]
+                    ac_id = (rows[i])[1]
+                    web = (rows[i])[2]
+                    user = (rows[i])[3]
+                    mail = (rows[i])[4]
+                    passw = (rows[i])[5]
+                    record = RecordHandler(ac_id,web, user, mail, passw)
+                    dict_object = record.__dict__
+                    values_object = dict_object.values()
+                    list_obj = list(values_object)
+                    list_obj.pop(0)
+                    records.append(list_obj)
+            else:
+                if len(rows) == 0:
+                    LogHandler.debug_log(self, function_name, 'There are no records on rows:  ', '')
+
+                    records = 'NO'
+                else:
+                    idi = (rows[0])[0]
+                    ac_id = (rows[0])[1]
+                    web = (rows[0])[2]
+                    user = (rows[0])[3]
+                    mail = (rows[0])[4]
+                    passw = (rows[0])[5]
+                    record = RecordHandler(ac_id, web, user, mail, passw)
+                    dict_object = record.__dict__
+                    values_object = dict_object.values()
+                    list_obj = list(values_object)
+                    LogHandler.debug_log(self, function_name, 'List of objects:   ', list_obj)
+
+                    records.append(list_obj)
+
+            
+    
+    
             cur.close()
             conn.close()
-            
+
+            return records
+
         except Exception as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
             
@@ -193,3 +242,87 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
+
+
+    
+    def check_verify_email(self, new_eml, verify_eml):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        new_email = new_eml
+        verify_email = verify_eml
+        if new_email == verify_email:
+
+            return True
+
+
+    
+    def check_verify_password(self, new_passw, verify_passw):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        new_pass = new_passw
+        verify_pass = verify_passw
+        if new_pass == verify_pass:
+
+            return True
+
+
+    
+    def check_old_email(self, email):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        acc_email = self.email
+        old_email = email
+        if acc_email == old_email:
+
+            return True
+
+
+
+    def check_old_password(self, passw):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        q_key = self.query_encryption_key(self.id)
+        key = q_key[2]
+        acc_password = EncryptionHandler.decrypt(key, self.password)
+        old_password = passw
+        if acc_password == old_password:
+
+            return True
+
+
+    def check_account_status(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        status = ''
+        query = "select * from account where username = %s"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        
+        try:
+            
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, self.username)
+            status = (rows[5])
+
+            cur.close()
+            conn.close()
+
+            return status
+        
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+            
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+
+
+    
+    
