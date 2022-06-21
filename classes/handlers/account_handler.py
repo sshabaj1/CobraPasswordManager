@@ -572,6 +572,50 @@ class AccountHandler():
         """
         
         EmailHandler.send_email(self, self.email, message)
+        
+        
+    
+    def query_login_credentials(self,qusername):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        
+        query = "SELECT * FROM account WHERE username = '%s'"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, str(qusername))
+            query_id = str((rows[0])[0])
+            query_username = str((rows[0])[1])
+            query_email = str((rows[0])[2])
+            q_password = str((rows[0])[3])
+            query_password = bytes(q_password, 'utf-8')
+            q_key = self.query_encryption_key(query_id)
+            key = q_key[2]
+            raw_password = EncryptionHandler.decrypt(key, query_password)
+            credentials = {'id' : query_id,
+                           'username' : query_username,
+                           'email' : query_email,
+                           'password' : raw_password
+                           }
+            
+            LogHandler.debug_log(self, function_name, 'credentials: ', credentials)
+
+            cur.close()
+            conn.close()
+            
+            return credentials
+
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
 
         
 
