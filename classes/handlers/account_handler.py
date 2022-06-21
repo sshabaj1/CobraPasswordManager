@@ -232,7 +232,7 @@ class AccountHandler():
     
             cur.close()
             conn.close()
-            
+
             return records
 
         except Exception as db_error:
@@ -242,3 +242,87 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
+
+
+    
+    def check_verify_email(self, new_eml, verify_eml):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        new_email = new_eml
+        verify_email = verify_eml
+        if new_email == verify_email:
+
+            return True
+
+
+    
+    def check_verify_password(self, new_passw, verify_passw):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        new_pass = new_passw
+        verify_pass = verify_passw
+        if new_pass == verify_pass:
+
+            return True
+
+
+    
+    def check_old_email(self, email):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        acc_email = self.email
+        old_email = email
+        if acc_email == old_email:
+
+            return True
+
+
+
+    def check_old_password(self, passw):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        q_key = self.query_encryption_key(self.id)
+        key = q_key[2]
+        acc_password = EncryptionHandler.decrypt(key, self.password)
+        old_password = passw
+        if acc_password == old_password:
+
+            return True
+
+
+    def check_account_status(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        status = ''
+        query = "select * from account where username = %s"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        
+        try:
+            
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, self.username)
+            status = (rows[5])
+
+            cur.close()
+            conn.close()
+
+            return status
+        
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+            
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+
+
+    
+    
