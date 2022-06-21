@@ -21,6 +21,7 @@ class StaticVariables():
     CHANGE_EMAIL_PAGE = 'ChangeEmailPage'
     RECORD_LIST_PAGE = 'RecordListPage'
     ACCOUNT_PAGE = 'AccountPage'
+    CHANGE_PASSWORD = "Change Password"
 
     ACCOUNT = "Account"
     CHANGE_EMAIL = "Change Email"
@@ -49,5 +50,9 @@ class StaticVariables():
     NEW_EML = 'New Email'
     CONFIRM_EML = 'Confirm Email'
     CONFIRM_CODE = 'Code'
+    CHANGE_YOUR_PASSWORD = 'Change your password'
+    OLD_PASSWORD = 'Old Password'
+    NEW_PASSWORD = 'New Password'
+    CONFIRM_PASSWORD = 'Confirm Password'
     
 
