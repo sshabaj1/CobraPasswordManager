@@ -554,6 +554,26 @@ class AccountHandler():
         """
         
         EmailHandler.send_email(self, self.email, message)
+        
+        
+    
+    def send_otp_verify_acc(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.debug_log(self, function_name, '', '')
+
+        message = f"""\
+        Subject: Verify Email
+        Wellcome to Cobra Password Manager.
+        One last step to registration process.
+        Here is the code to finish the registration
+        
+        code: {self.get_otp()}
+        
+        """
+        
+        EmailHandler.send_email(self, self.email, message)
+
+        
 
 
         
