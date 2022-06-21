@@ -13,6 +13,7 @@ class StaticVariables():
     OLD_PASSWORD_INCORRECT = 'Old password is incorrect'
     ACCOUNT_VERIFIED = "Account Verified"
     ADD_RECORD = "Add Record"
+
     
     # PAGES
     LOGIN_PAGE = 'LoginPage'
@@ -20,11 +21,13 @@ class StaticVariables():
     CHANGE_PASSWORD_PAGE = 'ChangePasswordPage'
     CHANGE_EMAIL_PAGE = 'ChangeEmailPage'
     RECORD_LIST_PAGE = 'RecordListPage'
+    RECORD_TILE_PAGE = 'RecordTilePage'
     ACCOUNT_PAGE = 'AccountPage'
     CHANGE_PASSWORD = "Change Password"
 
     ACCOUNT = "Account"
     CHANGE_EMAIL = "Change Email"
+    RECORD_TILE = "Record Tile"
     
     # PATHS
     BACK_LOGO_PATH = './static/back_logo.png'
