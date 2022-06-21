@@ -384,3 +384,38 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
+                
+                
+                
+    def set_encrypt_key_id(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        connection_dict = DatabaseHandler.connect_enc_database(self)
+        query = "SELECT * FROM keyHolder ORDER BY id DESC LIMIT 1"
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            rows =  DatabaseHandler.query_database_without_params(self, conn, cur, query)
+
+            if len(rows) > 0:
+                q_id = (rows[0])[0]
+                record_id = 1 + q_id
+            else:
+                record_id = 1
+            
+            LogHandler.info_log(self, function_name, 'Record id: ', record_id)
+                    
+            cur.close()
+            conn.close()
+            
+            return record_id
+        
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
