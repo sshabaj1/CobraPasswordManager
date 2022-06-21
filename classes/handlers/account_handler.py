@@ -481,3 +481,14 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
+                
+                
+    
+    def verify_otp(self, n_otp):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        new_otp = n_otp
+        otp = self.get_otp()
+        if new_otp == otp:
+            return True
