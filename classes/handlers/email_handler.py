@@ -25,4 +25,5 @@ class EmailHandler():
             server.starttls(context=context)
             server.ehlo()
             server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, message) 
+            server.sendmail(sender_email, receiver_email, message)
+        LogHandler.debug_log(self, function_name, 'Email Sent', '')

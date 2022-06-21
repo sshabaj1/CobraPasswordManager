@@ -1,11 +1,14 @@
+from classes.handlers.email_handler import EmailHandler
 from classes.handlers.encryption_handler import  EncryptionHandler
 from classes.handlers.log_handler import LogHandler
 from classes.utilities.static_variables import StaticVariables
 from classes.handlers.database_handler import DatabaseHandler
 from classes.handlers.record_handler import  RecordHandler
+from classes.handlers.otp_handler import OtpHandler
 
 import sys
 import psycopg2
+from cryptography.fernet import Fernet
 
 
 class AccountHandler():
@@ -25,7 +28,7 @@ class AccountHandler():
         key = EncryptionHandler.generate_encryption_key()
         raw_password = self.password
         byte_password = EncryptionHandler.encrypt(raw_password, key)
-        passw = byte_password.decode('utf-8')
+        passw = byte_password.decode(StaticVariables.UTF_8)
         dublicate_query = 'SELECT * FROM account WHERE usermane = %s'
         connection_dict = DatabaseHandler.connect_main_database(self)
         conn = connection_dict['connection']
@@ -211,7 +214,7 @@ class AccountHandler():
                 if len(rows) == 0:
                     LogHandler.debug_log(self, function_name, 'There are no records on rows:  ', '')
 
-                    records = 'NO'
+                    records = StaticVariables.STRING_NO
                 else:
                     idi = (rows[0])[0]
                     ac_id = (rows[0])[1]
@@ -351,3 +354,418 @@ class AccountHandler():
 
     
     
+    def query_encryption_key(self, acc_id):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        connection_dict = DatabaseHandler.connect_enc_database(self)
+        query = "SELECT * FROM keyHolder WHERE account_id = '%s'"
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+
+        try:
+            
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, acc_id)
+            q_id = (rows[0])[0]
+            q_ac_id = (rows[0])[1]
+            q_key = (rows[0])[2]
+            
+            record = [q_id, q_ac_id, q_key]
+            
+            LogHandler.debug_log(self, function_name, 'record: ', record)
+            
+                    
+            cur.close()
+            conn.close()
+            
+            return record
+        
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+                
+                
+                
+    def create_encrypt_key_id(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        connection_dict = DatabaseHandler.connect_enc_database(self)
+        query = "SELECT * FROM keyHolder ORDER BY id DESC LIMIT 1"
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            rows =  DatabaseHandler.query_database_without_params(self, conn, cur, query)
+
+            if len(rows) > 0:
+                q_id = (rows[0])[0]
+                record_id = 1 + q_id
+            else:
+                record_id = 1
+            
+            LogHandler.info_log(self, function_name, 'Record id: ', record_id)
+                    
+            cur.close()
+            conn.close()
+            
+            return record_id
+        
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+                
+                
+    
+    def insert_encrypted_key(self, enc_key, acc_id):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        account_id = acc_id
+        key = enc_key.decode(StaticVariables.UTF_8) 
+        id = self.create_encrypt_key_id()
+        
+        query = 'INSERT INTO keyHolder (id, account_id, key) VALUES (%s,%s, %s)'
+        args = (id, account_id, key)
+        connection_dict = DatabaseHandler.connect_enc_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            
+            DatabaseHandler.insert(self, conn, cur, query, args)
+            
+            conn.commit()   
+            cur.close()
+            conn.close()
+
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+                
+                
+    
+    def get_otp(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        query = "SELECT otp FROM account WHERE username = '%s'"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, self.username)
+            otp = str((rows[0])[0])
+
+            
+            cur.close()
+            conn.close()
+            
+            return otp
+
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+                
+                
+    
+    def verify_otp(self, n_otp):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        new_otp = n_otp
+        otp = self.get_otp()
+        if new_otp == otp:
+            return True
+        
+        
+        
+    def set_otp(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        q_otp = OtpHandler.create_otp()
+        query = "Update account set otp = %s where username = %s"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+
+        try:
+            
+            DatabaseHandler.update(self, conn, cur, query, (q_otp, self.username))
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+                
+                
+                
+    def send_otp_change_email(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.debug_log(self, function_name, '', '')
+        
+        message = f"""\
+        Subject: Change Email
+        This is the One time code to change your email
+        
+        code: {self.get_otp()}
+        
+        """
+        EmailHandler.send_email(self, self.email, message)
+        
+        
+    
+    
+    def send_otp_change_pass(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.debug_log(self, function_name, '', '')
+
+        message = f"""\
+        Subject: Change Password
+        This is the One time code to change your password
+        
+        code: {self.get_otp()}
+        
+        """
+        
+        EmailHandler.send_email(self, self.email, message)
+        
+        
+    
+    def send_otp_verify_acc(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.debug_log(self, function_name, '', '')
+
+        message = f"""\
+        Subject: Verify Email
+        Wellcome to Cobra Password Manager.
+        One last step to registration process.
+        Here is the code to finish the registration
+        
+        code: {self.get_otp()}
+        
+        """
+        
+        EmailHandler.send_email(self, self.email, message)
+        
+        
+    
+    def query_login_credentials(self,qusername):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        
+        query = "SELECT * FROM account WHERE username = '%s'"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, str(qusername))
+            query_id = str((rows[0])[0])
+            query_username = str((rows[0])[1])
+            query_email = str((rows[0])[2])
+            q_password = str((rows[0])[3])
+            query_password = bytes(q_password, StaticVariables.UTF_8)
+            q_key = self.query_encryption_key(query_id)
+            key = q_key[2]
+            raw_password = EncryptionHandler.decrypt(key, query_password)
+            credentials = {'id' : query_id,
+                           'username' : query_username,
+                           'email' : query_email,
+                           'password' : raw_password
+                           }
+            
+            LogHandler.debug_log(self, function_name, 'credentials: ', credentials)
+
+            cur.close()
+            conn.close()
+            
+            return credentials
+
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+                
+                
+    def insert_new_email(self, usern, new_eml):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        username_query = "SELECT * FROM account WHERE username = '%s'"
+        email_query = "Update account set email = %s where id = %s"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, username_query, str(usern))
+            q_rec_id = rows[0]
+            DatabaseHandler.update(self, conn, cur, email_query, (new_eml, q_rec_id))
+
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+                
+                
+    
+    def insert_new_password(self, usern, new_passw):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        username_query = "SELECT * FROM account WHERE username = '%s'"
+        password_query = "Update account set password = %s where id = %s"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, username_query, str(usern))
+            q_rec_id = rows[0]
+            DatabaseHandler.update(self, conn, cur, password_query, (new_passw, q_rec_id))
+
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+                
+                
+    
+    def change_email(self, old_eml, new_eml, verify_eml, ver_otp):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        is_old_email = self.check_old_email(old_eml)
+        is_email_verified = self.check_verify_email(new_eml, verify_eml)
+        is_otp_verified = self.verify_otp(ver_otp)
+        status = ''
+        
+        if is_old_email == True:
+            if is_email_verified == True:
+                if is_otp_verified == True:
+                    self.insert_new_email(self.username, new_eml)
+                    status = StaticVariables.EMAIL_CHANGED
+                    return status
+                else:
+                    status = StaticVariables.INCORRECT_OTP
+                    return status
+            else:
+                status = StaticVariables.EMAILS_DONT_MATCH
+                return status
+        else:
+            status = StaticVariables.OLD_EMAIL_INCORRECT
+            return status
+        
+        
+        
+    
+    def change_password(self, acc_id, old_passw, new_passw, verify_passw, ver_otp):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        key_raw = self.query_encryption_key(acc_id)
+        key = key_raw[2]
+        byte_password = EncryptionHandler.encrypt(self, new_passw, key)
+        q_password = byte_password.decode(StaticVariables.UTF_8) 
+        is_old_password = self.check_old_password(old_passw)
+        is_password_verified = self.check_verify_password(new_passw, verify_passw)
+        is_otp_verified = self.verify_otp(ver_otp)
+        status = ''
+        
+        if is_old_password == True:
+            if is_password_verified == True:
+                if is_otp_verified == True:
+                    self.insert_new_password(self.username, q_password)
+                    status = StaticVariables.PASSWORD_CHANGED
+                    return status
+                else:
+                    status = StaticVariables.INCORRECT_OTP
+                    return status
+            else:
+                status =StaticVariables.PASSWRODS_DONT_MATCH
+                return status
+        else:
+            status = StaticVariables.OLD_PASSWORD_INCORRECT
+            return status
+
+
+
+    def set_new_password(self, acc_id, passw):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+
+        str_key = self.query_encryption_key(acc_id)
+        key = bytes(str_key[2], StaticVariables.UTF_8)
+        byte_password = EncryptionHandler.encrypt(self, passw, key)
+        q_password = byte_password.decode(StaticVariables.UTF_8) 
+        
+        query = "Update account set password = %s where id = %s"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            
+            DatabaseHandler.update(self, conn, cur, query, (q_password, acc_id))
+
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+        
+
+
+        
