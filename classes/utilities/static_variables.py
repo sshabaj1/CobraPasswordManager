@@ -13,6 +13,7 @@ class StaticVariables():
     OLD_PASSWORD_INCORRECT = 'Old password is incorrect'
     ACCOUNT_VERIFIED = "Account Verified"
     ADD_RECORD = "Add Record"
+
     
     # PAGES
     LOGIN_PAGE = 'LoginPage'
@@ -20,8 +21,13 @@ class StaticVariables():
     CHANGE_PASSWORD_PAGE = 'ChangePasswordPage'
     CHANGE_EMAIL_PAGE = 'ChangeEmailPage'
     RECORD_LIST_PAGE = 'RecordListPage'
+    RECORD_TILE_PAGE = 'RecordTilePage'
+    ACCOUNT_PAGE = 'AccountPage'
+    CHANGE_PASSWORD = "Change Password"
 
     ACCOUNT = "Account"
+    CHANGE_EMAIL = "Change Email"
+    RECORD_TILE = "Record Tile"
     
     # PATHS
     BACK_LOGO_PATH = './static/back_logo.png'
@@ -36,10 +42,20 @@ class StaticVariables():
     SAVE_LOGO_PATH = './static/save_logo.png'
     LENGTH_LOGO_PATH = './static/length_logo.png'
     GENERATE_PASSWORD_LOGO_PATH = './static/generate_password_logo.png'
+    OTP_LOGO_PATH = f'./static/otp_logo.png'
     
     
     # PAGE TEXT
     ACC_VERIFIED = 'Account verified. Please login to begin.'
     GENERATE_PASSWORD = 'Generate Password'
+    CHANGE_EML = 'Change your email'
+    OLD_EML = 'Old Email'
+    NEW_EML = 'New Email'
+    CONFIRM_EML = 'Confirm Email'
+    CONFIRM_CODE = 'Code'
+    CHANGE_YOUR_PASSWORD = 'Change your password'
+    OLD_PASSWORD = 'Old Password'
+    NEW_PASSWORD = 'New Password'
+    CONFIRM_PASSWORD = 'Confirm Password'
     
 
