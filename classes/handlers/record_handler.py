@@ -71,45 +71,44 @@ class RecordHandler():
                 
                 
     def update_record(self, acc_id, rec_id,web, user, eml, passw):
-        print('record.py/update_record')
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
         account_id = acc_id
         record_id = rec_id
         q_web = web
         q_user = user
         q_eml = eml
         q_passw = passw
+
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
         
         try:
-            conn =  psycopg2.connect(
-            host = hostname,
-            dbname = database,
-            user = username,
-            password = pwd,
-            port = port_id
-            )
-            cur = conn.cursor()
-            print("Table Before updating record ")
-            query = "SELECT * FROM record WHERE account_id = %s AND id = %s "
-            args = (account_id, record_id)
-            cur.execute(query, args)
-            record = cur.fetchone()
-            print('record.py/update_record/record: ', record)
-            q_rec_id = record[0]
+            
 
             # Update single record now
             sql_update_website = """Update record set website = %s WHERE id = %s AND account_id = %s"""
-            cur.execute(sql_update_website, (q_web, record_id, account_id))
+            DatabaseHandler.update(self, conn, cur, sql_update_website,  (q_web, record_id, account_id))
+
             sql_update_username = """Update record set username = %s WHERE id = %s AND account_id = %s"""
-            cur.execute(sql_update_username, (q_user, record_id, account_id))
+            DatabaseHandler.update(self, conn, cur, sql_update_username,  (q_user, record_id, account_id))
+
             sql_update_email = """Update record set email = %s WHERE id = %s AND account_id = %s"""
-            cur.execute(sql_update_email, (q_eml, record_id, account_id))
+            DatabaseHandler.update(self, conn, cur, sql_update_email,  (q_eml, record_id, account_id))
+
             sql_update_password = """Update record set password = %s WHERE id = %s AND account_id = %s"""
-            cur.execute(sql_update_password, (q_passw, record_id, account_id))
+            DatabaseHandler.update(self, conn, cur, sql_update_password,  (q_passw, record_id, account_id))
             
             conn.commit()
-            count = cur.rowcount
-            print(count, "Record Updated successfully ")
             cur.close()
             conn.close()
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
+
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
