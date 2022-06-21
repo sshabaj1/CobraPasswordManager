@@ -673,6 +673,33 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
+                
+                
+    
+    def change_email(self, old_eml, new_eml, verify_eml, ver_otp):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        is_old_email = self.check_old_email(old_eml)
+        is_email_verified = self.check_verify_email(new_eml, verify_eml)
+        is_otp_verified = self.verify_otp(ver_otp)
+        status = ''
+        
+        if is_old_email == True:
+            if is_email_verified == True:
+                if is_otp_verified == True:
+                    self.insert_new_email(self.username, new_eml)
+                    status = 'Email Changed'
+                    return status
+                else:
+                    status = 'OTP is incorrect'
+                    return status
+            else:
+                status = "Emails don't match"
+                return status
+        else:
+            status = 'Old email is incorrect'
+            return status
 
         
 
