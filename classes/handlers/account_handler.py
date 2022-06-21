@@ -166,3 +166,66 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
+
+
+    
+    def query_records_by_account_id(self, id):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        acc_id = id
+        query = ("SELECT * FROM record WHERE account_id = %s")
+        args = acc_id
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        records = []
+
+        try:
+            
+            
+            
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, args)
+
+            LogHandler.debug_log(self, function_name, 'rows lenght', len(rows))
+
+            if len(rows) > 1:
+                for i in range(len(rows)):
+                    print('enterd in loop: ', i)
+                    idi = (rows[i])[0]
+                    ac_id = (rows[i])[1]
+                    web = (rows[i])[2]
+                    user = (rows[i])[3]
+                    mail = (rows[i])[4]
+                    passw = (rows[i])[5]
+                    record = Record(ac_id,web, user, mail, passw)
+                    dict_object = record.__dict__
+                    values_object = dict_object.values()
+                    list_obj = list(values_object)
+                    list_obj.pop(0)
+                    records.append(list_obj)
+            else:
+                if len_rows == 0:
+                    records = 'NO'
+                else:
+                    idi = (rows[0])[0]
+                    ac_id = (rows[0])[1]
+                    web = (rows[0])[2]
+                    user = (rows[0])[3]
+                    mail = (rows[0])[4]
+                    passw = (rows[0])[5]
+                    record = Record(ac_id, web, user, mail, passw)
+                    dict_object = record.__dict__
+                    values_object = dict_object.values()
+                    list_obj = list(values_object)
+                    print('account.py/query_records/recods1: ', list_obj)
+                    records.append(list_obj)
+
+            
+    
+    
+            cur.close()
+            conn.close()
+            return records
+        except Exception as error:
+            print('db error:', error)
