@@ -120,3 +120,49 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
+
+
+        
+    def get_record(self, id, web, usern, eml):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        acc_id = int(id)
+        website = web
+        user = usern
+        email = eml
+
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        query = "SELECT * FROM record WHERE account_id = %s AND website = %s AND username = %s AND email = %s"
+        args = (acc_id, website, user, email)
+
+        
+        try:
+            
+            
+            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, args)
+
+            q_id = (rows[0])[0]
+            q_ac_id = (rows[0])[1]
+            q_web = (rows[0])[2]
+            q_usern = (rows[0])[3]
+            q_mail = (rows[0])[4]
+            q_passw = (rows[0])[5]
+            
+            record_returned = [q_id, q_ac_id, q_web, q_usern, q_mail, q_passw]
+            LogHandler.info_log(self, function_name, 'record_returned: ', record_returned)
+            
+                    
+            cur.close()
+            conn.close()
+            return record_returned
+
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+            
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
