@@ -28,7 +28,7 @@ class AccountHandler():
         key = EncryptionHandler.generate_encryption_key()
         raw_password = self.password
         byte_password = EncryptionHandler.encrypt(raw_password, key)
-        passw = byte_password.decode('utf-8')
+        passw = byte_password.decode(StaticVariables.UTF_8)
         dublicate_query = 'SELECT * FROM account WHERE usermane = %s'
         connection_dict = DatabaseHandler.connect_main_database(self)
         conn = connection_dict['connection']
@@ -214,7 +214,7 @@ class AccountHandler():
                 if len(rows) == 0:
                     LogHandler.debug_log(self, function_name, 'There are no records on rows:  ', '')
 
-                    records = 'NO'
+                    records = StaticVariables.STRING_NO
                 else:
                     idi = (rows[0])[0]
                     ac_id = (rows[0])[1]
@@ -430,7 +430,7 @@ class AccountHandler():
         LogHandler.info_log(self, function_name, '', '')
         
         account_id = acc_id
-        key = enc_key.decode("utf-8") 
+        key = enc_key.decode(StaticVariables.UTF_8) 
         id = self.create_encrypt_key_id()
         
         query = 'INSERT INTO keyHolder (id, account_id, key) VALUES (%s,%s, %s)'
@@ -592,7 +592,7 @@ class AccountHandler():
             query_username = str((rows[0])[1])
             query_email = str((rows[0])[2])
             q_password = str((rows[0])[3])
-            query_password = bytes(q_password, 'utf-8')
+            query_password = bytes(q_password, StaticVariables.UTF_8)
             q_key = self.query_encryption_key(query_id)
             key = q_key[2]
             raw_password = EncryptionHandler.decrypt(key, query_password)
@@ -689,16 +689,16 @@ class AccountHandler():
             if is_email_verified == True:
                 if is_otp_verified == True:
                     self.insert_new_email(self.username, new_eml)
-                    status = 'Email Changed'
+                    status = StaticVariables.EMAIL_CHANGED
                     return status
                 else:
-                    status = 'OTP is incorrect'
+                    status = StaticVariables.INCORRECT_OTP
                     return status
             else:
-                status = "Emails don't match"
+                status = StaticVariables.EMAILS_DONT_MATCH
                 return status
         else:
-            status = 'Old email is incorrect'
+            status = StaticVariables.OLD_EMAIL_INCORRECT
             return status
         
         
@@ -711,7 +711,7 @@ class AccountHandler():
         key_raw = self.query_encryption_key(acc_id)
         key = key_raw[2]
         byte_password = EncryptionHandler.encrypt(self, new_passw, key)
-        q_password = byte_password.decode("utf-8") 
+        q_password = byte_password.decode(StaticVariables.UTF_8) 
         is_old_password = self.check_old_password(old_passw)
         is_password_verified = self.check_verify_password(new_passw, verify_passw)
         is_otp_verified = self.verify_otp(ver_otp)
@@ -721,16 +721,16 @@ class AccountHandler():
             if is_password_verified == True:
                 if is_otp_verified == True:
                     self.insert_new_password(self.username, q_password)
-                    status = 'Password Changed'
+                    status = StaticVariables.PASSWORD_CHANGED
                     return status
                 else:
-                    status = 'OTP is incorrect'
+                    status = StaticVariables.INCORRECT_OTP
                     return status
             else:
-                status = "Passwords don't match"
+                status =StaticVariables.PASSWRODS_DONT_MATCH
                 return status
         else:
-            status = 'Old password is incorrect'
+            status = StaticVariables.OLD_PASSWORD_INCORRECT
             return status
 
 
@@ -741,9 +741,9 @@ class AccountHandler():
         
 
         str_key = self.query_encryption_key(acc_id)
-        key = bytes(str_key[2], 'utf-8')
+        key = bytes(str_key[2], StaticVariables.UTF_8)
         byte_password = EncryptionHandler.encrypt(self, passw, key)
-        q_password = byte_password.decode("utf-8") 
+        q_password = byte_password.decode(StaticVariables.UTF_8) 
         
         query = "Update account set password = %s where id = %s"
         connection_dict = DatabaseHandler.connect_main_database(self)

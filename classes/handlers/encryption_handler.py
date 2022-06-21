@@ -1,4 +1,5 @@
 from classes.handlers.log_handler import LogHandler
+from classes.utilities.static_variables import StaticVariables
 
 from cryptography.fernet import Fernet
 import sys
@@ -20,7 +21,7 @@ class EncryptionHandler():
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         encrypt_key = enc_key
-        raw_param = bytes(param, 'utf-8')
+        raw_param = bytes(param, StaticVariables.UTF_8)
         LogHandler.debug_log(self, function_name, 'raw_param: ', raw_param)
         cipher_suite = Fernet(encrypt_key)
         ciphered_text = cipher_suite.encrypt(raw_param)
@@ -31,11 +32,11 @@ class EncryptionHandler():
     def decrypt(self, enc_key, cryp_param):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
-        key = bytes(enc_key, 'utf-8')
+        key = bytes(enc_key, StaticVariables.UTF_8)
         LogHandler.debug_log(self, function_name, 'key: ', key)
         cipher_suite = Fernet(key)
         ciphered_text = bytes(cryp_param)
         byte_text = (cipher_suite.decrypt(ciphered_text))
-        unciphered_text = byte_text.decode("utf-8") 
+        unciphered_text = byte_text.decode(StaticVariables.UTF_8) 
         LogHandler.debug_log(self, function_name, 'raw_param: ', unciphered_text)
         return unciphered_text

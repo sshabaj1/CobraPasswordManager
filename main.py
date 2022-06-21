@@ -2,6 +2,8 @@ from classes.handlers.log_handler import LogHandler
 from classes.handlers.database_handler import DatabaseHandler
 from classes.handlers.email_handler import EmailHandler
 
+from classes.utilities.static_variables import StaticVariables
+
 
 import tkinter as tk
 import secrets
@@ -17,7 +19,7 @@ class SampleApp(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self._Canvas= None
-        self.switch_Canvas('LoginPage')
+        self.switch_Canvas(StaticVariables.LOGIN_PAGE)
 
     
     def switch_Canvas(self, Canvas_class):
@@ -129,7 +131,8 @@ class SampleApp(tk.Tk):
     
     
     def get_account_username(self, username):
-        print('main.py/get_account_username')
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
         self.username = username
         
     def set_account_username(self):

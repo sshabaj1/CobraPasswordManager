@@ -1,6 +1,8 @@
 from classes.handlers.account_handler import AccountHandler
 from classes.handlers.log_handler import LogHandler
 
+from classes.utilities.static_variables import StaticVariables
+
 import tkinter as tk
 import threading
 import sys
@@ -22,17 +24,16 @@ class AccountPage(tk.Frame):
         tk.Frame.__init__(self,master, *args, **kwargs)
         self.canvas = tk.Canvas(self, bg = 'red' ,width = 345,height = 518)
         self.canvas.pack(fill = "both", expand = True)
-        master.title("Account")
-        print('account page')
+        master.title(StaticVariables.ACCOUNT)
         acc_id = master.set_account_id()
-        print('account id', acc_id)
+
         
         
-        self.back_logo = tk.PhotoImage(file = './static/back_logo.png')
-        self.email_logo = tk.PhotoImage(file = './static/email_logo.png')
-        self.password_logo = tk.PhotoImage(file = './static/password_logo.png')
+        self.back_logo = tk.PhotoImage(file = StaticVariables.BACK_LOGO_PATH)
+        self.email_logo = tk.PhotoImage(file = StaticVariables.EMAIL_LOGO_PATH)
+        self.password_logo = tk.PhotoImage(file = StaticVariables.PASSWORD_LOGO_PATH)
         
-        back_button = tk.Button( self, image = self.back_logo, borderwidth=0, bg='red', command=lambda: master.switch_Canvas('LandingPage'))
+        back_button = tk.Button( self, image = self.back_logo, borderwidth=0, bg='red', command=lambda: master.switch_Canvas(StaticVariables.LANDING_PAGE))
         back_button_canvas = self.canvas.create_window( 10, 10, anchor = "nw",window = back_button)
         
         
@@ -62,7 +63,7 @@ class AccountPage(tk.Frame):
             acc = AccountHandler(acc_username, acc_email, acc_password)
             send_mail = threading.Thread(target=send_change_password_otp)
             send_mail.start()
-            master.switch_Canvas('ChangePasswordPage')
+            master.switch_Canvas(StaticVariables.CHANGE_PASSWORD_PAGE)
             
         
         def send_change_mail_otp():
@@ -93,9 +94,9 @@ class AccountPage(tk.Frame):
             acc = AccountHandler(acc_username, acc_email, acc_password)
             send_mail = threading.Thread(target=send_change_mail_otp)
             send_mail.start()
-            master.switch_Canvas('ChangeEmailPage')
+            master.switch_Canvas(StaticVariables.CHANGE_EMAIL_PAGE)
         
-        self.small_cobra_logo = tk.PhotoImage(file = './static/small_cobra_logo.png')
+        self.small_cobra_logo = tk.PhotoImage(file = StaticVariables.SMALL_COBRA_LOGO)
         small_logo_image = self.canvas.create_image(130, 400, image = self.small_cobra_logo, anchor=NW)
         
         change_password_button = tk.Button( self, image = self.password_logo, borderwidth=0, bg='red', command=handle_change_password)
