@@ -89,7 +89,7 @@ class AccountHandler():
 
         q_record_id = rec_id
         q_account_id = acc_id
-        query = ("SELECT * FROM record WHERE account_id = %s AND id = %s")
+        query = "SELECT * FROM record WHERE account_id = %s AND id = %s"
         args = (q_account_id, q_record_id)
         connection_dict = DatabaseHandler.connect_main_database(self)
         conn = connection_dict['connection']
@@ -315,6 +315,31 @@ class AccountHandler():
 
             return status
         
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+            
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+
+
+    def confirm_account(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+
+        query = "Update account set status = %s where username = %s"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+
+        try:
+            DatabaseHandler.update(self, conn, cur, query, ('Verified', self.username))
+
+            cur.commit()
+            cur.close()
+            conn.close()
+
         except Exception as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
             
