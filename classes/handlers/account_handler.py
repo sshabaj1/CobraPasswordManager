@@ -2,6 +2,7 @@ from classes.handlers.encryption_handler import  EncryptionHandler
 from classes.handlers.log_handler import LogHandler
 from classes.utilities.static_variables import StaticVariables
 from classes.handlers.database_handler import DatabaseHandler
+from classes.handlers.record_handler import  RecordHandler
 
 import sys
 import psycopg2
@@ -191,21 +192,25 @@ class AccountHandler():
 
             if len(rows) > 1:
                 for i in range(len(rows)):
-                    print('enterd in loop: ', i)
+
+                    LogHandler.debug_log(self, function_name, 'Enterd in loop: ', i)
+
                     idi = (rows[i])[0]
                     ac_id = (rows[i])[1]
                     web = (rows[i])[2]
                     user = (rows[i])[3]
                     mail = (rows[i])[4]
                     passw = (rows[i])[5]
-                    record = Record(ac_id,web, user, mail, passw)
+                    record = RecordHandler(ac_id,web, user, mail, passw)
                     dict_object = record.__dict__
                     values_object = dict_object.values()
                     list_obj = list(values_object)
                     list_obj.pop(0)
                     records.append(list_obj)
             else:
-                if len_rows == 0:
+                if len(rows) == 0:
+                    LogHandler.debug_log(self, function_name, 'There are no records on rows:  ', '')
+
                     records = 'NO'
                 else:
                     idi = (rows[0])[0]
@@ -214,11 +219,12 @@ class AccountHandler():
                     user = (rows[0])[3]
                     mail = (rows[0])[4]
                     passw = (rows[0])[5]
-                    record = Record(ac_id, web, user, mail, passw)
+                    record = RecordHandler(ac_id, web, user, mail, passw)
                     dict_object = record.__dict__
                     values_object = dict_object.values()
                     list_obj = list(values_object)
-                    print('account.py/query_records/recods1: ', list_obj)
+                    LogHandler.debug_log(self, function_name, 'List of objects:   ', list_obj)
+
                     records.append(list_obj)
 
             
@@ -226,6 +232,13 @@ class AccountHandler():
     
             cur.close()
             conn.close()
+            
             return records
-        except Exception as error:
-            print('db error:', error)
+
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+            
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
