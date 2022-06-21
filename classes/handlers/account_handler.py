@@ -733,6 +733,38 @@ class AccountHandler():
             status = 'Old password is incorrect'
             return status
 
+
+
+    def set_new_password(self, acc_id, passw):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+
+        str_key = self.query_encryption_key(acc_id)
+        key = bytes(str_key[2], 'utf-8')
+        byte_password = EncryptionHandler.encrypt(self, passw, key)
+        q_password = byte_password.decode("utf-8") 
+        
+        query = "Update account set password = %s where id = %s"
+        connection_dict = DatabaseHandler.connect_main_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            
+            DatabaseHandler.update(self, conn, cur, query, (q_password, acc_id))
+
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
         
 
 
