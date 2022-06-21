@@ -6,6 +6,7 @@ from classes.handlers.record_handler import  RecordHandler
 
 import sys
 import psycopg2
+from cryptography.fernet import Fernet
 
 
 class AccountHandler():
@@ -419,3 +420,36 @@ class AccountHandler():
             if conn is not None:
                 cur.close()
                 conn.close()
+                
+                
+    
+    def insert_encrypted_key(self, enc_key, acc_id):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        account_id = acc_id
+        key = enc_key.decode("utf-8") 
+        id = self.create_encrypt_key_id()
+        
+        query = 'INSERT INTO keyHolder (id, account_id, key) VALUES (%s,%s, %s)'
+        args = (id, account_id, key)
+        connection_dict = DatabaseHandler.connect_enc_database(self)
+        conn = connection_dict['connection']
+        cur = connection_dict['cursor']
+        
+        try:
+            
+            DatabaseHandler.insert(self, conn, cur, query, args)
+            
+            conn.commit()   
+            cur.close()
+            conn.close()
+
+        except (Exception, psycopg2.DatabaseError) as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:
+            if conn is not None:
+                cur.close()
+                conn.close()
+            
