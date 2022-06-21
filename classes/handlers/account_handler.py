@@ -700,6 +700,38 @@ class AccountHandler():
         else:
             status = 'Old email is incorrect'
             return status
+        
+        
+        
+    
+    def change_password(self, acc_id, old_passw, new_passw, verify_passw, ver_otp):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        key_raw = self.query_encryption_key(acc_id)
+        key = key_raw[2]
+        byte_password = EncryptionHandler.encrypt(self, new_passw, key)
+        q_password = byte_password.decode("utf-8") 
+        is_old_password = self.check_old_password(old_passw)
+        is_password_verified = self.check_verify_password(new_passw, verify_passw)
+        is_otp_verified = self.verify_otp(ver_otp)
+        status = ''
+        
+        if is_old_password == True:
+            if is_password_verified == True:
+                if is_otp_verified == True:
+                    self.insert_new_password(self.username, q_password)
+                    status = 'Password Changed'
+                    return status
+                else:
+                    status = 'OTP is incorrect'
+                    return status
+            else:
+                status = "Passwords don't match"
+                return status
+        else:
+            status = 'Old password is incorrect'
+            return status
 
         
 
