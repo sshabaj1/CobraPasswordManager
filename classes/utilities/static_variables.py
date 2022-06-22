@@ -13,6 +13,11 @@ class StaticVariables():
     OLD_PASSWORD_INCORRECT = 'Old password is incorrect'
     ACCOUNT_VERIFIED = "Account Verified"
     ADD_RECORD = "Add Record"
+    TREEVIEW = 'Treeview'
+    SEARCH_DATA = 'Search Data'
+    WEBSITE_STRING = 'Website'
+    USERNAME_STRING = 'Username'
+    EMAIL_STRING = 'Email'
 
     
     # PAGES
@@ -23,14 +28,17 @@ class StaticVariables():
     RECORD_LIST_PAGE = 'RecordListPage'
     RECORD_TILE_PAGE = 'RecordTilePage'
     ACCOUNT_PAGE = 'AccountPage'
-    CHANGE_PASSWORD = "Change Password"
-    COBRA_PASSW_MANAGER = "Cobra Password Manager"
     PASSW_RECOVERED_PAGE = 'Password Recovered Page'
+    ADD_RECORD_PAGE = 'AddRecordPage'
 
+    # PAGE TITLES
     ACCOUNT = "Account"
     CHANGE_EMAIL = "Change Email"
     RECORD_TILE = "Record Tile"
     PASSWORD_SET = "Password Set"
+    RECORD_LIST = "Record List"
+    CHANGE_PASSWORD = "Change Password"
+    COBRA_PASSW_MANAGER = "Cobra Password Manager"
     
     # PATHS
     BACK_LOGO_PATH = './static/back_logo.png'
@@ -49,6 +57,7 @@ class StaticVariables():
     LOGOUT_LOGO_PATH = './static/logout_logo.png'
     LIST_LOGO_PATH = './static/list_logo.png'
     ACCOUNT_LOGO_PATH = './static/account_logo1.png'
+    ADD_RECORD_LOGO_PATH = './static/add_record_logo.png'
     
     
     # PAGE TEXT
