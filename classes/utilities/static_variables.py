@@ -25,10 +25,12 @@ class StaticVariables():
     ACCOUNT_PAGE = 'AccountPage'
     CHANGE_PASSWORD = "Change Password"
     COBRA_PASSW_MANAGER = "Cobra Password Manager"
+    PASSW_RECOVERED_PAGE = 'Password Recovered Page'
 
     ACCOUNT = "Account"
     CHANGE_EMAIL = "Change Email"
     RECORD_TILE = "Record Tile"
+    PASSWORD_SET = "Password Set"
     
     # PATHS
     BACK_LOGO_PATH = './static/back_logo.png'
@@ -61,5 +63,6 @@ class StaticVariables():
     OLD_PASSWORD = 'Old Password'
     NEW_PASSWORD = 'New Password'
     CONFIRM_PASSWORD = 'Confirm Password'
+    PASSW_RECOVERED_SUCCESFULLY = 'Password recovered succesfully. Please login to continue. '
     
 
