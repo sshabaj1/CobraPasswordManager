@@ -24,6 +24,7 @@ class StaticVariables():
     RECORD_TILE_PAGE = 'RecordTilePage'
     ACCOUNT_PAGE = 'AccountPage'
     CHANGE_PASSWORD = "Change Password"
+    COBRA_PASSW_MANAGER = "Cobra Password Manager"
 
     ACCOUNT = "Account"
     CHANGE_EMAIL = "Change Email"
@@ -43,6 +44,9 @@ class StaticVariables():
     LENGTH_LOGO_PATH = './static/length_logo.png'
     GENERATE_PASSWORD_LOGO_PATH = './static/generate_password_logo.png'
     OTP_LOGO_PATH = f'./static/otp_logo.png'
+    LOGOUT_LOGO_PATH = './static/logout_logo.png'
+    LIST_LOGO_PATH = './static/list_logo.png'
+    ACCOUNT_LOGO_PATH = './static/account_logo1.png'
     
     
     # PAGE TEXT

@@ -1,10 +1,11 @@
 from classes.handlers.email_handler import EmailHandler
 from classes.handlers.encryption_handler import  EncryptionHandler
 from classes.handlers.log_handler import LogHandler
-from classes.utilities.static_variables import StaticVariables
 from classes.handlers.database_handler import DatabaseHandler
 from classes.handlers.record_handler import  RecordHandler
 from classes.handlers.otp_handler import OtpHandler
+
+from classes.utilities.static_variables import StaticVariables
 
 import sys
 import psycopg2
