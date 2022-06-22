@@ -2,6 +2,21 @@ from classes.handlers.log_handler import LogHandler
 from classes.handlers.database_handler import DatabaseHandler
 from classes.handlers.email_handler import EmailHandler
 
+from classes.pages.accountPage import AccountPage
+from classes.pages.accountVerifiedPage import AccountVerifiedPage
+from classes.pages.addRecordPage import AddRecordPage
+from classes.pages.changeEmailPage import ChangeEmailPage
+from classes.pages.changePasswordPage import ChangePasswordPage
+from classes.pages.editRecordPage import EditRecordPage
+from classes.pages.landingPage import LandingPage
+from classes.pages.passwordRecoveredPage import PasswordRecoveredPage
+from classes.pages.recordListPage import RecordListPage
+from classes.pages.recordTilePage import RecordTilePage
+from classes.pages.recoverPasswordPage import RecoverPasswordPage
+from classes.pages.registerPage import RegisterPage
+from classes.pages.setNewPasswordPage import SetNewPasswordPage
+from classes.pages.verifyMailPage import VerifyMailPage
+
 from classes.utilities.static_variables import StaticVariables
 
 

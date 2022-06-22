@@ -24,6 +24,7 @@ class StaticVariables():
     L_PASSW_STRING = 'password'
     WRONG_EML_STRING = 'Wrong Email'
     WRONG_USR_STRING = 'Wrong Username'
+    VERIFIED_STRING = 'Verified'
     
 
     
@@ -42,6 +43,8 @@ class StaticVariables():
     VERIFY_MAIL_PAGE = 'VerifyMailPage'
     PASSW_RECOVERED_PAGE = 'PasswordRecoveredPage'
     ACCOUNT_VERIFIED_PAGE = 'AccountVerifiedPage'
+    REGISTER_PAGE = 'RegisterPage'
+    RECOVER_PASSW_PAGE = 'RecoverPasswordPage'
 
 
     # PAGE TITLES
@@ -78,6 +81,7 @@ class StaticVariables():
     COPY_LOGO_PATH = './static/copy_logo.png'
     EDIT_LOGO_PATH = './static/edit_logo.png'
     ERROR_LOGO_PATH = f'./static/error_logo.png'
+    REGISTER_LOGO_PATH = './static/register_logo.png'
     
     
     # PAGE TEXT
@@ -105,3 +109,8 @@ class StaticVariables():
     WRONG_CODE_ERROR = '''Wrong Code! Please Try Again'''
     WRONG_PASSWORD_ERROR = '''Passwords don\'t match! Please Try Again'''
     INSERT_CODE_VERIFY_MAIL = 'Please insert the code that you recived on your email'
+    USERNAME_NOT_FOUND = '''    Username does not exist. 
+            Please try again or create an account'''
+    WRONG_PASSW = '''Wrong password! Please Try Again'''
+    FORGOT_PASSW_BUTTON = "Forgot Password ?"
+    SING_UP_BUTTON = 'Not a member? Sing Up below'
