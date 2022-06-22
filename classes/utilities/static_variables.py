@@ -13,6 +13,18 @@ class StaticVariables():
     OLD_PASSWORD_INCORRECT = 'Old password is incorrect'
     ACCOUNT_VERIFIED = "Account Verified"
     ADD_RECORD = "Add Record"
+    TREEVIEW = 'Treeview'
+    SEARCH_DATA = 'Search Data'
+    WEBSITE_STRING = 'Website'
+    USERNAME_STRING = 'Username'
+    EMAIL_STRING = 'Email'
+    L_WEBSITE_STRING = 'website'
+    L_USERNAME_STRING = 'username'
+    L_EMAIL_STRING = 'email'
+    L_PASSW_STRING = 'password'
+    WRONG_EML_STRING = 'Wrong Email'
+    WRONG_USR_STRING = 'Wrong Username'
+    
 
     
     # PAGES
@@ -23,11 +35,21 @@ class StaticVariables():
     RECORD_LIST_PAGE = 'RecordListPage'
     RECORD_TILE_PAGE = 'RecordTilePage'
     ACCOUNT_PAGE = 'AccountPage'
-    CHANGE_PASSWORD = "Change Password"
+    PASSW_RECOVERED_PAGE = 'Password Recovered Page'
+    ADD_RECORD_PAGE = 'AddRecordPage'
+    EDIT_RECORD_PAGE = 'EditRecordPage'
+    SET_NEW_PASSW_PAGE = 'SetNewPasswordPage'
 
+
+    # PAGE TITLES
     ACCOUNT = "Account"
     CHANGE_EMAIL = "Change Email"
     RECORD_TILE = "Record Tile"
+    PASSWORD_SET = "Password Set"
+    RECORD_LIST = "Record List"
+    CHANGE_PASSWORD = "Change Password"
+    COBRA_PASSW_MANAGER = "Cobra Password Manager"
+    RECOVER_PASSWORD = "Recover Password"
     
     # PATHS
     BACK_LOGO_PATH = './static/back_logo.png'
@@ -43,6 +65,12 @@ class StaticVariables():
     LENGTH_LOGO_PATH = './static/length_logo.png'
     GENERATE_PASSWORD_LOGO_PATH = './static/generate_password_logo.png'
     OTP_LOGO_PATH = f'./static/otp_logo.png'
+    LOGOUT_LOGO_PATH = './static/logout_logo.png'
+    LIST_LOGO_PATH = './static/list_logo.png'
+    ACCOUNT_LOGO_PATH = './static/account_logo1.png'
+    ADD_RECORD_LOGO_PATH = './static/add_record_logo.png'
+    COPY_LOGO_PATH = './static/copy_logo.png'
+    EDIT_LOGO_PATH = './static/edit_logo.png'
     
     
     # PAGE TEXT
@@ -57,5 +85,7 @@ class StaticVariables():
     OLD_PASSWORD = 'Old Password'
     NEW_PASSWORD = 'New Password'
     CONFIRM_PASSWORD = 'Confirm Password'
-    
+    PASSW_RECOVERED_SUCCESFULLY = 'Password recovered succesfully. Please login to continue. '
+    COPIED = 'Copied'
+    ENTER_USR_EML_TO_RECOVER_PASSW = 'Please enter your username and email to recover the password'
 
