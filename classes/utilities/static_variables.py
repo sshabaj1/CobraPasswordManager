@@ -22,6 +22,8 @@ class StaticVariables():
     L_USERNAME_STRING = 'username'
     L_EMAIL_STRING = 'email'
     L_PASSW_STRING = 'password'
+    WRONG_EML_STRING = 'Wrong Email'
+    WRONG_USR_STRING = 'Wrong Username'
     
 
     
@@ -36,6 +38,8 @@ class StaticVariables():
     PASSW_RECOVERED_PAGE = 'Password Recovered Page'
     ADD_RECORD_PAGE = 'AddRecordPage'
     EDIT_RECORD_PAGE = 'EditRecordPage'
+    SET_NEW_PASSW_PAGE = 'SetNewPasswordPage'
+
 
     # PAGE TITLES
     ACCOUNT = "Account"
@@ -45,6 +49,7 @@ class StaticVariables():
     RECORD_LIST = "Record List"
     CHANGE_PASSWORD = "Change Password"
     COBRA_PASSW_MANAGER = "Cobra Password Manager"
+    RECOVER_PASSWORD = "Recover Password"
     
     # PATHS
     BACK_LOGO_PATH = './static/back_logo.png'
@@ -82,5 +87,5 @@ class StaticVariables():
     CONFIRM_PASSWORD = 'Confirm Password'
     PASSW_RECOVERED_SUCCESFULLY = 'Password recovered succesfully. Please login to continue. '
     COPIED = 'Copied'
-    
+    ENTER_USR_EML_TO_RECOVER_PASSW = 'Please enter your username and email to recover the password'
 
