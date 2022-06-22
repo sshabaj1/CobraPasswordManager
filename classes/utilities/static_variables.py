@@ -18,6 +18,11 @@ class StaticVariables():
     WEBSITE_STRING = 'Website'
     USERNAME_STRING = 'Username'
     EMAIL_STRING = 'Email'
+    L_WEBSITE_STRING = 'website'
+    L_USERNAME_STRING = 'username'
+    L_EMAIL_STRING = 'email'
+    L_PASSW_STRING = 'password'
+    
 
     
     # PAGES
@@ -30,6 +35,7 @@ class StaticVariables():
     ACCOUNT_PAGE = 'AccountPage'
     PASSW_RECOVERED_PAGE = 'Password Recovered Page'
     ADD_RECORD_PAGE = 'AddRecordPage'
+    EDIT_RECORD_PAGE = 'EditRecordPage'
 
     # PAGE TITLES
     ACCOUNT = "Account"
@@ -58,6 +64,8 @@ class StaticVariables():
     LIST_LOGO_PATH = './static/list_logo.png'
     ACCOUNT_LOGO_PATH = './static/account_logo1.png'
     ADD_RECORD_LOGO_PATH = './static/add_record_logo.png'
+    COPY_LOGO_PATH = './static/copy_logo.png'
+    EDIT_LOGO_PATH = './static/edit_logo.png'
     
     
     # PAGE TEXT
@@ -73,5 +81,6 @@ class StaticVariables():
     NEW_PASSWORD = 'New Password'
     CONFIRM_PASSWORD = 'Confirm Password'
     PASSW_RECOVERED_SUCCESFULLY = 'Password recovered succesfully. Please login to continue. '
+    COPIED = 'Copied'
     
 
