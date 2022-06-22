@@ -40,7 +40,8 @@ class StaticVariables():
     EDIT_RECORD_PAGE = 'EditRecordPage'
     SET_NEW_PASSW_PAGE = 'SetNewPasswordPage'
     VERIFY_MAIL_PAGE = 'VerifyMailPage'
-    PASSW_RECOVERED_PAGE = PasswordRecoveredPage
+    PASSW_RECOVERED_PAGE = 'PasswordRecoveredPage'
+    ACCOUNT_VERIFIED_PAGE = 'AccountVerifiedPage'
 
 
     # PAGE TITLES
@@ -54,6 +55,7 @@ class StaticVariables():
     RECOVER_PASSWORD = "Recover Password"
     REGISTER = "Register"
     SET_PASSWORD = "Set Password"
+    VERIFY_YOUR_EML = "Verify Your Email Address"
     
     # PATHS
     BACK_LOGO_PATH = './static/back_logo.png'
@@ -102,3 +104,4 @@ class StaticVariables():
     ENTER_NEW_PASSW = 'Enter your new password'
     WRONG_CODE_ERROR = '''Wrong Code! Please Try Again'''
     WRONG_PASSWORD_ERROR = '''Passwords don\'t match! Please Try Again'''
+    INSERT_CODE_VERIFY_MAIL = 'Please insert the code that you recived on your email'
