@@ -39,6 +39,7 @@ class StaticVariables():
     ADD_RECORD_PAGE = 'AddRecordPage'
     EDIT_RECORD_PAGE = 'EditRecordPage'
     SET_NEW_PASSW_PAGE = 'SetNewPasswordPage'
+    VERIFY_MAIL_PAGE = 'VerifyMailPage'
 
 
     # PAGE TITLES
@@ -50,6 +51,7 @@ class StaticVariables():
     CHANGE_PASSWORD = "Change Password"
     COBRA_PASSW_MANAGER = "Cobra Password Manager"
     RECOVER_PASSWORD = "Recover Password"
+    REGISTER = "Register"
     
     # PATHS
     BACK_LOGO_PATH = './static/back_logo.png'
@@ -88,4 +90,9 @@ class StaticVariables():
     PASSW_RECOVERED_SUCCESFULLY = 'Password recovered succesfully. Please login to continue. '
     COPIED = 'Copied'
     ENTER_USR_EML_TO_RECOVER_PASSW = 'Please enter your username and email to recover the password'
-
+    WELLCOME_MESSAGE ='Wellcome, few steps await to become a member'
+    ENTER_CREDENCIALS = 'Enter the credencials and then click next to go to the next step'
+    PLEASE_WAIT = 'Please wait ...'
+    PASSWORD_SHORT_ERROR = 'Password must contain at least 8 chars!'
+    EMAIL_SHORT_ERROR = 'Email must contain at least 10 chars!'
+    USERNAME_SHORT_ERROR = 'Esername must contain atleast 6 chars!'
