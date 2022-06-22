@@ -40,6 +40,7 @@ class StaticVariables():
     EDIT_RECORD_PAGE = 'EditRecordPage'
     SET_NEW_PASSW_PAGE = 'SetNewPasswordPage'
     VERIFY_MAIL_PAGE = 'VerifyMailPage'
+    PASSW_RECOVERED_PAGE = PasswordRecoveredPage
 
 
     # PAGE TITLES
@@ -52,6 +53,7 @@ class StaticVariables():
     COBRA_PASSW_MANAGER = "Cobra Password Manager"
     RECOVER_PASSWORD = "Recover Password"
     REGISTER = "Register"
+    SET_PASSWORD = "Set Password"
     
     # PATHS
     BACK_LOGO_PATH = './static/back_logo.png'
@@ -73,6 +75,7 @@ class StaticVariables():
     ADD_RECORD_LOGO_PATH = './static/add_record_logo.png'
     COPY_LOGO_PATH = './static/copy_logo.png'
     EDIT_LOGO_PATH = './static/edit_logo.png'
+    ERROR_LOGO_PATH = f'./static/error_logo.png'
     
     
     # PAGE TEXT
@@ -96,3 +99,6 @@ class StaticVariables():
     PASSWORD_SHORT_ERROR = 'Password must contain at least 8 chars!'
     EMAIL_SHORT_ERROR = 'Email must contain at least 10 chars!'
     USERNAME_SHORT_ERROR = 'Esername must contain atleast 6 chars!'
+    ENTER_NEW_PASSW = 'Enter your new password'
+    WRONG_CODE_ERROR = '''Wrong Code! Please Try Again'''
+    WRONG_PASSWORD_ERROR = '''Passwords don\'t match! Please Try Again'''
