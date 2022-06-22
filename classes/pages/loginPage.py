@@ -4,6 +4,7 @@ from classes.handlers.log_handler import LogHandler
 from classes.utilities.static_variables import StaticVariables
 
 import tkinter as tk
+import sys
 from typing import TYPE_CHECKING
 
 
@@ -24,7 +25,7 @@ class LoginPage(tk.Canvas):
         self.canvas = tk.Canvas(self , bg = 'red', width = 345,height = 518)
         self.canvas.pack(fill = "both", expand = True)
         app.title(StaticVariables.COBRA_PASSW_MANAGER)
-        app.iconbitmap(StaticVariables.COBRA_LOGO_PATH)
+        app.iconbitmap(r'./static/cobra_logo.ico')
         
 
         self.logo = tk.PhotoImage(file =StaticVariables.COBRA_LOGO_PATH)

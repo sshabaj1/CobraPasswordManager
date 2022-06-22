@@ -16,9 +16,9 @@ from classes.pages.recoverPasswordPage import RecoverPasswordPage
 from classes.pages.registerPage import RegisterPage
 from classes.pages.setNewPasswordPage import SetNewPasswordPage
 from classes.pages.verifyMailPage import VerifyMailPage
+from classes.pages.loginPage import LoginPage
 
 from classes.utilities.static_variables import StaticVariables
-
 
 import tkinter as tk
 import secrets
@@ -47,7 +47,7 @@ class SampleApp(tk.Tk):
             self._Canvas.destroy()
         self._Canvas = new_Canvas
         self._Canvas.pack()
-    account_id = ''
+
     
     def query_account(self, qid):
         function_name = sys._getframe().f_code.co_name
