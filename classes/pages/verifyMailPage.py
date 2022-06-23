@@ -22,7 +22,7 @@ class VerifyMailPage(tk.Canvas):
         self.canvas = tk.Canvas(self , bg = 'red', width = 345,height = 518)
         self.canvas.pack(fill = "both", expand = True)
         app.title(StaticVariables.VERIFY_YOUR_EML)
-        app.iconbitmap(StaticVariables.COBRA_LOGO_PATH)
+        app.iconbitmap(StaticVariables.COBRA_ICON_PATH)
         
         response_text = tk.StringVar()
         
@@ -41,7 +41,7 @@ class VerifyMailPage(tk.Canvas):
         back_button_canvas = self.canvas.create_window( 10, 10, anchor = "nw",window = back_button)
         
         self.otp_logo = tk.PhotoImage(file=StaticVariables.OTP_LOGO_PATH)
-        otp_image = self.canvas.create_image(90, 187, image = self.otp_logo, anchor=NW)
+        otp_image = self.canvas.create_image(90, 187, image = self.otp_logo, anchor=tk.NW)
         
         
         acc_id = app.set_account_id()
@@ -78,7 +78,7 @@ class VerifyMailPage(tk.Canvas):
         
         
         self.small_cobra_logo = tk.PhotoImage(file =StaticVariables.SMALL_COBRA_LOGO_PATH)
-        small_logo_image = self.canvas.create_image(130, 450, image = self.small_cobra_logo, anchor=NW)
+        small_logo_image = self.canvas.create_image(130, 450, image = self.small_cobra_logo, anchor=tk.NW)
         
         verify_button = tk.Button( self, image=self.next_logo, borderwidth=0,bg='red', command=handle_verify_email)
         verify_button_canvas = self.canvas.create_window( 160, 300, anchor = "nw",window = verify_button)

@@ -24,7 +24,7 @@ class RegisterPage(tk.Canvas):
         self.canvas = tk.Canvas(self , bg = 'red', width = 345,height = 518)
         self.canvas.pack(fill = "both", expand = True)
         app.title(StaticVariables.REGISTER)
-        app.iconbitmap(StaticVariables.COBRA_LOGO_PATH)
+        app.iconbitmap(StaticVariables.COBRA_ICON_PATH)
         
         # Load images
         self.username_logo = tk.PhotoImage(file=StaticVariables.USERNAME_LOGO_PATH)
@@ -35,9 +35,9 @@ class RegisterPage(tk.Canvas):
         
         response_text = StringVar()
         
-        username_image = self.canvas.create_image(80, 187, image = self.username_logo, anchor=NW)
-        email_image = self.canvas.create_image(80, 217, image = self.email_logo, anchor=NW)
-        password_image = self.canvas.create_image(80, 247, image = self.password_logo, anchor=NW)
+        username_image = self.canvas.create_image(80, 187, image = self.username_logo, anchor=tk.NW)
+        email_image = self.canvas.create_image(80, 217, image = self.email_logo, anchor=tk.NW)
+        password_image = self.canvas.create_image(80, 247, image = self.password_logo, anchor=tk.NW)
 
         back_button = tk.Button( self, image = self.back_logo, borderwidth=0, background='red', command=lambda: app.switch_Canvas('LoginPage'))
         back_button_canvas = self.canvas.create_window( 10, 10, anchor = "nw",window = back_button)
@@ -111,7 +111,7 @@ class RegisterPage(tk.Canvas):
             
         
         self.small_cobra_logo = tk.PhotoImage(file =StaticVariables.SMALL_COBRA_LOGO_PATH)
-        small_logo_image = self.canvas.create_image(130, 450, image = self.small_cobra_logo, anchor=NW)
+        small_logo_image = self.canvas.create_image(130, 450, image = self.small_cobra_logo, anchor=tk.NW)
         
         
         register_button = tk.Button( self, image = self.next_logo, borderwidth=0, bg='red', command= handle_register)

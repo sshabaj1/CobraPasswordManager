@@ -97,7 +97,7 @@ class AccountPage(tk.Frame):
             master.switch_Canvas(StaticVariables.CHANGE_EMAIL_PAGE)
         
         self.small_cobra_logo = tk.PhotoImage(file = StaticVariables.SMALL_COBRA_LOGO)
-        small_logo_image = self.canvas.create_image(130, 400, image = self.small_cobra_logo, anchor=NW)
+        small_logo_image = self.canvas.create_image(130, 400, image = self.small_cobra_logo, anchor=tk.NW)
         
         change_password_button = tk.Button( self, image = self.password_logo, borderwidth=0, bg='red', command=handle_change_password)
         change_password_button_canvas = self.canvas.create_window( 200, 250, anchor = "nw",window = change_password_button)

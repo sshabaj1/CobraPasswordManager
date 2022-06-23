@@ -31,7 +31,7 @@ class LandingPage(tk.Frame): # Sub-lcassing tk.Frame
         self.list_logo = tk.PhotoImage(file =StaticVariables.LIST_LOGO_PATH)
         self.account_logo = tk.PhotoImage(file =StaticVariables.ACCOUNT_LOGO_PATH )
         self.small_cobra_logo = tk.PhotoImage(file =StaticVariables.SMALL_COBRA_LOGO_PATH)
-        small_logo_image = self.canvas.create_image(130, 400, image = self.small_cobra_logo, anchor=NW)
+        small_logo_image = self.canvas.create_image(130, 400, image = self.small_cobra_logo, anchor=tk.NW)
         
         account_button = tk.Button( self, image = self.account_logo, borderwidth=0, bg='red', command=lambda: master.switch_Canvas(StaticVariables.ACCOUNT_PAGE))
         account_button_canvas = self.canvas.create_window( 200, 255, anchor = "nw",window = account_button)

@@ -23,7 +23,7 @@ class SetNewPasswordPage(tk.Canvas):
         self.canvas = tk.Canvas(self , bg = 'red', width = 345,height = 518)
         self.canvas.pack(fill = "both", expand = True)
         app.title(StaticVariables.SET_PASSWORD)
-        app.iconbitmap(StaticVariables.COBRA_LOGO_PATH)
+        app.iconbitmap(StaticVariables.COBRA_ICON_PATH)
         print()
 
         
@@ -34,15 +34,15 @@ class SetNewPasswordPage(tk.Canvas):
         error_logo = tk.PhotoImage(file=StaticVariables.ERROR_LOGO_PATH)
         
         self.small_cobra_logo = tk.PhotoImage(file =StaticVariables.SMALL_COBRA_LOGO_PATH)
-        small_logo_image = self.canvas.create_image(130, 450, image = self.small_cobra_logo, anchor=NW)
+        small_logo_image = self.canvas.create_image(130, 450, image = self.small_cobra_logo, anchor=tk.NW)
         
         website_label = tk.Label(self, bg='red', text=StaticVariables.ENTER_NEW_PASSW, foreground='white')
         website_canvas = self.canvas.create_window( 100, 150, anchor = "nw",window = website_label)
         
         
-        username_image = self.canvas.create_image(90, 190, image = self.otp_logo, anchor=NW)
-        password1_image = self.canvas.create_image(90, 220, image = self.password_logo, anchor=NW)
-        password2_image = self.canvas.create_image(90, 250, image = self.password_logo, anchor=NW)
+        username_image = self.canvas.create_image(90, 190, image = self.otp_logo, anchor=tk.NW)
+        password1_image = self.canvas.create_image(90, 220, image = self.password_logo, anchor=tk.NW)
+        password2_image = self.canvas.create_image(90, 250, image = self.password_logo, anchor=tk.NW)
         
         code_label = tk.Label(self, bg='red', text=StaticVariables.CONFIRM_CODE, foreground='white')
         code_canvas = self.canvas.create_window( 240, 190, anchor = "nw",window = code_label)

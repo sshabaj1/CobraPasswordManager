@@ -34,9 +34,9 @@ class LoginPage(tk.Canvas):
         error_logo = tk.PhotoImage(file=StaticVariables.ERROR_LOGO_PATH)
         self.username_logo = tk.PhotoImage(file=StaticVariables.USERNAME_LOGO_PATH)
         self.password_logo = tk.PhotoImage(file=StaticVariables.PASSWORD_LOGO_PATH)
-        username_image = self.canvas.create_image(80, 190, image = self.username_logo, anchor=NW)
-        password_image = self.canvas.create_image(80, 220, image = self.password_logo, anchor=NW)
-        logo_image = self.canvas.create_image(100, 50, image = self.logo, anchor=NW)
+        username_image = self.canvas.create_image(80, 190, image = self.username_logo, anchor=tk.NW)
+        password_image = self.canvas.create_image(80, 220, image = self.password_logo, anchor=tk.NW)
+        logo_image = self.canvas.create_image(100, 50, image = self.logo, anchor=tk.NW)
         
 
        # Create Entry Box
