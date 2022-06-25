@@ -54,7 +54,7 @@ class SampleApp(tk.Tk):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        query = "SELECT * FROM account WHERE id = '%s'"
+        query = "SELECT * FROM account WHERE id = %s"
 
         
         try:
@@ -108,7 +108,7 @@ class SampleApp(tk.Tk):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        query = "SELECT * FROM account WHERE username = '%s'"
+        query = "SELECT * FROM account WHERE username = %s"
 
         
         try:

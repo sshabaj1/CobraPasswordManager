@@ -28,15 +28,21 @@ class RecordListPage(tk.Frame): # Sub-lcassing tk.Frame
 
         
         acc_data = master.query_account(acc_id)
+        
+        LogHandler.debug_log(self, 'function_name', 'Acc data: ', acc_data)
+        
         ac_usr = acc_data[1]
         ac_mail = acc_data[2]
         ac_passw = acc_data[3]
         acc = AccountHandler(ac_usr, ac_mail, ac_passw)
-        records = acc.query_records(acc_id)
+        records = acc.query_records_by_account_id(acc_id)
+        
+        LogHandler.debug_log(self, 'function_name', 'records list: ', records)
+        
         if records != StaticVariables.STRING_NO:
 
-            function_name = sys._getframe().f_code.co_name
-            LogHandler.debug_log(self, function_name, 'records: ', records)
+
+            LogHandler.debug_log(self, 'function_name', 'records: ', records)
 
             records[0].pop(0)
         else:
