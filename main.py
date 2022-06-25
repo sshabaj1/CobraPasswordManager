@@ -54,12 +54,10 @@ class SampleApp(tk.Tk):
         LogHandler.info_log(self, function_name, '', '')
         
         query = "SELECT * FROM account WHERE id = '%s'"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, qid)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, qid)
             idi = (rows[0])[0]
             usrn = (rows[0])[1]
             eml = (rows[0])[2]
@@ -68,19 +66,13 @@ class SampleApp(tk.Tk):
             credetials = [idi, usrn, eml, passwr]
             
             LogHandler.info_log(self, function_name, 'credetials: ', credetials)
-            
-            cur.close()
-            conn.close()
-            
+
             return credetials
         
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
+
                 
                 
     def create_otp_recover_password(self):
@@ -116,12 +108,10 @@ class SampleApp(tk.Tk):
         LogHandler.info_log(self, function_name, '', '')
         
         query = "SELECT * FROM account WHERE username = '%s'"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, user)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, user)
             idi = (rows[0])[0]
             usrn = (rows[0])[1]
             eml = (rows[0])[2]
@@ -131,18 +121,10 @@ class SampleApp(tk.Tk):
             
             LogHandler.info_log(self, function_name, 'credentials', credetials)
             
-            cur.close()
-            conn.close()
-            
             return credetials
         
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
-        
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
     
     
     def get_account_username(self, username):
@@ -199,4 +181,8 @@ class SampleApp(tk.Tk):
 
 if __name__ == "__main__":
     app = SampleApp()
+    DatabaseHandler.create_account_table(app)
+    DatabaseHandler.create_record_table(app)
+    DatabaseHandler.create_keyHolder_table(app)
+    LogHandler.create_log_file(app)
     app.mainloop()

@@ -30,6 +30,104 @@ class DatabaseHandler():
         return connection_dict
     
     
+    
+    def create_account_table(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        
+
+        connection_data = DatabaseHandler.connect_main_database(self)
+        conn = connection_data['connection']
+        cur = conn.cursor()
+        create_acount_table = ''' Create TABLE IF NOT EXISTS account(
+                            id                  int PRIMARY KEY,
+                            username            varchar(40) NOT NULL,
+                            email               varchar(40) NOT NULL,
+                            password            varchar(225) NOT NULL,
+                            otp                 varchar(40),
+                            status              varchar(40))'''
+        try:
+            cur.execute(create_acount_table)
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:   
+             
+            if conn is not None:
+                cur.close()
+                conn.close()
+        
+        
+        
+    
+    def create_record_table(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        connection_data = DatabaseHandler.connect_main_database(self)
+        conn = connection_data['connection']
+        cur = conn.cursor()
+        create_record_table = ''' Create TABLE IF NOT EXISTS record(
+                            id                 int PRIMARY KEY,
+                            account_id         int REFERENCES account(id),
+                            website            varchar(40) NOT NULL,
+                            username           varchar(40) NOT NULL,
+                            email              varchar(40) NOT NULL,
+                            password           varchar(40))'''
+        try:
+            
+            cur.execute(create_record_table)
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:   
+             
+            if conn is not None:
+                cur.close()
+                conn.close()
+        
+        
+    def create_keyHolder_table(self):
+        function_name = sys._getframe().f_code.co_name
+        LogHandler.info_log(self, function_name, '', '')
+        
+        connection_data = DatabaseHandler.connect_enc_database(self)
+        conn = connection_data['connection']
+        cur = conn.cursor()
+        create_keyHolder_table = ''' Create TABLE IF NOT EXISTS keyHolder(
+                                id                  int PRIMARY KEY,
+                                account_id            varchar(40) NOT NULL,
+                                key               varchar(255) NOT NULL)'''
+
+        try:
+            
+            cur.execute(create_keyHolder_table)
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:   
+             
+            if conn is not None:
+                cur.close()
+                conn.close()
+    
+    
     def connect_enc_database(self):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
@@ -49,85 +147,175 @@ class DatabaseHandler():
         return connection_dict
 
 
-    def create_table(self, conn, create_command, table_name):
+
+    def insert(self, database, script, value):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
+        LogHandler.debug_log(self, function_name, 'data to insert: ', value)
+        
+        connection_data = DatabaseHandler.check_database_selected(self, database)
+        if connection_data != 'Error':
+            conn = connection_data['connection']
+            cur = conn.cursor()
+        
+        try:
+            cur.execute(script, value)
 
-        main_cur = conn.cursor()
-        main_cur.execute(create_command)
-        LogHandler.debug_log(self, function_name, StaticVariables.TABLE_CREATED, table_name)
+            LogHandler.info_log(self, function_name, 'Value Inserted in database: ', value)
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:   
+             
+            if conn is not None:
+                cur.close()
+                conn.close()
 
     
-    def drop_table(self, conn, drop_command, table_name):
+    def update(self, database, script, value):
+
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
 
-        main_cur = conn.cursor()
-        main_cur.execute(drop_command)
+        connection_data = DatabaseHandler.check_database_selected(self, database)
+        if connection_data != 'Error':
+            conn = connection_data['connection']
+            cur = conn.cursor()
+            
+        try:
+        
+            cur.execute(script, value)
 
-        LogHandler.debug_log(self, function_name, StaticVariables.TABLE_DELETED, table_name)
-
-
-    def insert(self, connection, script, value):
-        function_name = sys._getframe().f_code.co_name
-        LogHandler.info_log(self, function_name, '', '')
-        conn = connection
-        cur = conn.cursor()
-        cur.execute(script, value)
-
-        LogHandler.info_log(self, function_name, 'Value Inserted in database: ', value)
-
+            LogHandler.info_log(self, function_name, 'Database Table Updated: ', '')
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:   
+             
+            if conn is not None:
+                cur.close()
+                conn.close()
     
-    def update(self, connection, script, value):
 
-        function_name = sys._getframe().f_code.co_name
-        LogHandler.info_log(self, function_name, '', '')
-        conn = connection
-        cur = conn.cursor()
-        cur.execute(script, value)
-
-        LogHandler.info_log(self, function_name, 'Database Table Updated: ', '')
-    
-
-    def delete(self, connection, script, param):
+    def delete(self, database, script, param):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        conn = connection
-        cur = conn.cursor()
-        cur.execute(script, param)
+        connection_data = DatabaseHandler.check_database_selected(self, database)
+        if connection_data != 'Error':
+            conn = connection_data['connection']
+            cur = conn.cursor()
+            
+        try:
+            
+            cur.execute(script, (param,))
+            
+            LogHandler.info_log(self, function_name, 'Value Deleted from database: ', param)
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        LogHandler.info_log(self, function_name, 'Value Deleted from database: ', param)
+        finally:   
+             
+            if conn is not None:
+                cur.close()
+                conn.close()
 
 
-    def query_database_with_params(self, connection, query, args):
+    def query_database_with_params(self, database, query, args):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
-
+        
+        connection_data = DatabaseHandler.check_database_selected(self, database)
+        if connection_data != 'Error':
+            conn = connection_data['connection']
+            cur = conn.cursor()
+        
         main_query = query
         main_args = args
-        conn = connection
-        cursor = conn.cursor()
-        cursor.execute(main_query, main_args)
-        rows = cursor.fetchall()
+        
+        LogHandler.info_log(self, function_name, 'args: ', (main_args,))
+        
+        conn = connection_data['connection']
+        cur = conn.cursor()
+        
+        try:
+            
+            cur.execute(main_query, (main_args,))
+            rows = cur.fetchall()
 
-        LogHandler.info_log(self, function_name, 'rows: ', rows)
+            LogHandler.info_log(self, function_name, 'rows: ', rows)
 
-        return rows
+            cur.close()
+            conn.close()
+            return rows
+        
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:   
+             
+            if conn is not None:
+                cur.close()
+                conn.close()
 
 
-    def query_database_without_params(self, connection, query):
+    def query_database_without_params(self, database, query):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
+        
+        connection_data = DatabaseHandler.check_database_selected(self, database)
+        if connection_data != 'Error':
+            conn = connection_data['connection']
+            cur = conn.cursor()
 
-        function_name = sys._getframe().f_code.co_name
-        LogHandler.info_log(self, function_name, '', '')
         main_query = query
-        conn = connection
-        cursor = conn.cursor()
-        cursor.execute(main_query)
-        rows = cursor.fetchall()
+        
+        try:
+            cur.execute((main_query))
+            rows = cur.fetchall()
 
-        LogHandler.info_log(self, function_name, 'rows: ', rows)
+            LogHandler.info_log(self, function_name, 'rows: ', rows)
 
-        return rows
+            cur.close()
+            conn.close()
+            
+            return rows
+            
+        
+        except Exception as db_error:
+            LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
+        
+        finally:   
+             
+            if conn is not None:
+                cur.close()
+                conn.close()
+    
+    
+    
+    def check_database_selected(self, database):
+        
+        if database == 'Main':
+           connection_data = DatabaseHandler.connect_main_database(self)
+           
+        elif database == 'Enc':
+            connection_data = DatabaseHandler.connect_enc_database(self)
+        else:
+            connection_data = 'Error'
+            
+        return connection_data

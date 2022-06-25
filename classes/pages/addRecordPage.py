@@ -8,6 +8,8 @@ from classes.utilities.static_variables import StaticVariables
 import tkinter as tk
 import secrets
 import string
+from tkinter import StringVar
+
 import sys
 
 

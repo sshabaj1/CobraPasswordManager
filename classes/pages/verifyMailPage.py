@@ -5,6 +5,7 @@ from classes.utilities.static_variables import StaticVariables
 
 import sys
 import tkinter as tk
+from tkinter import StringVar
 from typing import TYPE_CHECKING
 
 

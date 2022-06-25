@@ -7,7 +7,7 @@ import tkinter as tk
 import threading
 from typing import TYPE_CHECKING
 import sys
-
+from tkinter import StringVar
 
 
 

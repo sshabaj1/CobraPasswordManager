@@ -98,7 +98,7 @@ class LoginPage(tk.Canvas):
             login_password = entry_password_login.get()
             acc = AccountHandler(login_username, '', login_password)
             status = acc.check_account_status()
-            credencials = acc.query_login_cred(login_username)
+            credencials = acc.query_login_credentials(login_username)
             
             if credencials is not None:
                 

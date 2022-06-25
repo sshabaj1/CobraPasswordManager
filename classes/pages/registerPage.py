@@ -5,6 +5,7 @@ from classes.utilities.static_variables import StaticVariables
 
 
 import tkinter as tk
+from tkinter import StringVar
 import threading
 import sys
 from typing import TYPE_CHECKING
@@ -31,7 +32,7 @@ class RegisterPage(tk.Canvas):
         self.email_logo = tk.PhotoImage(file=StaticVariables.EMAIL_LOGO_PATH)
         self.password_logo = tk.PhotoImage(file=StaticVariables.PASSWORD_LOGO_PATH)
         self.back_logo = tk.PhotoImage(file=StaticVariables.BACK_LOGO_PATH)
-        self.next_logo = tk.PhotoImage(file =StaticVariables.BACK_LOGO_PATH)
+        self.next_logo = tk.PhotoImage(file =StaticVariables.NEXT_LOGO_PATH)
         
         response_text = StringVar()
         
@@ -69,14 +70,17 @@ class RegisterPage(tk.Canvas):
         
         
         def send_register_otp(usr, eml, passw):
+            function_name = sys._getframe().f_code.co_name
+            LogHandler.debug_log(self, function_name, '', '')
             
             acc = AccountHandler(usr, eml, passw)
-        
+            acc.set_otp()
             acc.send_otp_verify_acc()
         
         
         def handle_register():
             function_name = sys._getframe().f_code.co_name
+            print('function_name: ', function_name)
             LogHandler.debug_log(self, function_name, '', '')
             
             register_username = entry_username_register.get()
@@ -89,10 +93,11 @@ class RegisterPage(tk.Canvas):
                     if len(register_password) > 8:
                         acc = AccountHandler(register_username, register_email, register_password)
                         account_created = acc.create_account()
-                        if account_created[0] is True:
+                        print('account_created: ', account_created)
+                        if account_created['status'] == True:
                             res = StaticVariables.PLEASE_WAIT
                             response_text.set(res)
-                            app.get_account_id(account_created[1])
+                            app.get_account_id(account_created['acc_id'])
 
                             send_mail = threading.Thread(target=send_register_otp, args=(register_username, register_email, register_password))
                             send_mail.start()
