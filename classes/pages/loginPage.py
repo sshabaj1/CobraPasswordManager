@@ -98,7 +98,12 @@ class LoginPage(tk.Canvas):
             login_password = entry_password_login.get()
             acc = AccountHandler(login_username, '', login_password)
             status = acc.check_account_status()
+            
+            LogHandler.info_log(self, function_name, 'check_account_status: ', '')
+            
             credencials = acc.query_login_credentials(login_username)
+            
+            LogHandler.info_log(self, function_name, 'credentials:  ', credencials)
             
             if credencials is not None:
                 

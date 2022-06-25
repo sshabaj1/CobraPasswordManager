@@ -40,7 +40,7 @@ class RegisterPage(tk.Canvas):
         email_image = self.canvas.create_image(80, 217, image = self.email_logo, anchor=tk.NW)
         password_image = self.canvas.create_image(80, 247, image = self.password_logo, anchor=tk.NW)
 
-        back_button = tk.Button( self, image = self.back_logo, borderwidth=0, background='red', command=lambda: app.switch_Canvas('LoginPage'))
+        back_button = tk.Button( self, image = self.back_logo, borderwidth=0, background='red', command=lambda: app.switch_Canvas(StaticVariables.LOGIN_PAGE))
         back_button_canvas = self.canvas.create_window( 10, 10, anchor = "nw",window = back_button)
         
         

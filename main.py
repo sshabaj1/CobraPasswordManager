@@ -17,6 +17,7 @@ from classes.pages.registerPage import RegisterPage
 from classes.pages.setNewPasswordPage import SetNewPasswordPage
 from classes.pages.verifyMailPage import VerifyMailPage
 from classes.pages.loginPage import LoginPage
+from classes.pages.accountVerifiedPage import AccountVerifiedPage
 
 from classes.utilities.static_variables import StaticVariables
 

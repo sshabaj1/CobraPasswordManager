@@ -69,7 +69,7 @@ class VerifyMailPage(tk.Canvas):
             if otp == otp_enterd:
                 
                 acc.confirm_account()
-                app.switch_Canvas(StaticVariables.ACCOUNT_VERIFIED)
+                app.switch_Canvas(StaticVariables.ACCOUNT_VERIFIED_PAGE)
                 
             else:
                 

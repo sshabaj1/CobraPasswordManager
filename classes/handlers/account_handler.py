@@ -44,6 +44,7 @@ class AccountHandler():
                 DatabaseHandler.insert(self, 'Main', insert_script, insert_values)
 
                 account_created = {"status" : True, 'acc_id': acc_id}
+                self.insert_encrypted_key(key, acc_id)
                 return account_created
         
         except (Exception, psycopg2.DatabaseError) as db_error:
@@ -266,8 +267,9 @@ class AccountHandler():
 
         try:
             
-            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, self.username)
-            status = (rows[5])
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, (self.username,))
+            LogHandler.info_log(self, function_name, 'rows--: ', rows)
+            status = ((rows[0])[5])
 
     
             return status
@@ -300,13 +302,16 @@ class AccountHandler():
         LogHandler.info_log(self, function_name, '', '')
         
  
-        query = "SELECT * FROM keyHolder WHERE account_id = '%s'"
+        query = "SELECT * FROM keyHolder WHERE account_id = %s"
 
         try:
             
             rows =  DatabaseHandler.query_database_with_params(self, 'Enc', query, acc_id)
-            q_id = (rows[0])[0]
-            q_ac_id = (rows[0])[1]
+            
+            LogHandler.info_log(self, function_name, 'enc key: ', rows)
+            
+            q_id = int((rows[0])[0])
+            q_ac_id = int((rows[0])[1])
             q_key = (rows[0])[2]
             
             record = [q_id, q_ac_id, q_key]
@@ -356,6 +361,7 @@ class AccountHandler():
         
         query = 'INSERT INTO keyHolder (id, account_id, key) VALUES (%s,%s, %s)'
         args = (id, account_id, key)
+        LogHandler.info_log(self, function_name, 'values to insert', args)
         
         try:
             
@@ -371,10 +377,10 @@ class AccountHandler():
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        query = "SELECT otp FROM account WHERE username = '%s'"
+        query = "SELECT otp FROM account WHERE username = %s"
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, self.username)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, (self.username,))
             otp = str((rows[0])[0])
 
 
@@ -470,20 +476,23 @@ class AccountHandler():
         LogHandler.info_log(self, function_name, '', '')
         
         
-        query = "SELECT * FROM account WHERE username = '%s'"
+        query = "SELECT * FROM account WHERE username = %s"
         
         
         try:
             
-            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, str(qusername))
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, qusername)
             query_id = str((rows[0])[0])
             query_username = str((rows[0])[1])
             query_email = str((rows[0])[2])
             q_password = str((rows[0])[3])
+            
+            LogHandler.info_log(self, function_name, 'credentials: ', rows)
+            
             query_password = bytes(q_password, StaticVariables.UTF_8)
             q_key = self.query_encryption_key(query_id)
             key = q_key[2]
-            raw_password = EncryptionHandler.decrypt(key, query_password)
+            raw_password = EncryptionHandler.decrypt(self, key, query_password)
             credentials = {'id' : query_id,
                            'username' : query_username,
                            'email' : query_email,
@@ -506,7 +515,7 @@ class AccountHandler():
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        username_query = "SELECT * FROM account WHERE username = '%s'"
+        username_query = "SELECT * FROM account WHERE username = %s"
         email_query = "Update account set email = %s where id = %s"
 
         
@@ -525,7 +534,7 @@ class AccountHandler():
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        username_query = "SELECT * FROM account WHERE username = '%s'"
+        username_query = "SELECT * FROM account WHERE username = %s"
         password_query = "Update account set password = %s where id = %s"
  
         

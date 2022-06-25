@@ -99,6 +99,7 @@ class DatabaseHandler():
         
         
     def create_keyHolder_table(self):
+        print('create key holder---------------------------------------------')
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
@@ -115,6 +116,7 @@ class DatabaseHandler():
             cur.execute(create_keyHolder_table)
             
             conn.commit()
+            print('created -----------------------------------------------')
             cur.close()
             conn.close()
             
@@ -134,7 +136,7 @@ class DatabaseHandler():
 
         enc_conn =  psycopg2.connect(
                     host = Configuration.DATABASE_HOST_NAME,
-                    dbname = Configuration.COBRA_DATABASE_NAME,
+                    dbname = Configuration.ENC_DATABASE_NAME,
                     user = Configuration.DATABASE_USERNAME,
                     password = Configuration.DATABASE_PASSWORD,
                     port = Configuration.DATABASE_PORT_ID

@@ -36,5 +36,5 @@ class AccountVerifiedPage(tk.Canvas):
         small_logo_image = self.canvas.create_image(130, 450, image = self.small_cobra_logo, anchor=tk.NW)
         
         
-        go_to_login_button = tk.Button( self, image = self.login_logo, borderwidth=0,  bg='red', command=lambda: app.switch_Canvas(StaticVariables.LANDING_PAGE))
+        go_to_login_button = tk.Button( self, image = self.login_logo, borderwidth=0,  bg='red', command=lambda: app.switch_Canvas(StaticVariables.LOGIN_PAGE))
         go_to_login_button_canvas = self.canvas.create_window( 160, 300, anchor = "nw",window = go_to_login_button)
