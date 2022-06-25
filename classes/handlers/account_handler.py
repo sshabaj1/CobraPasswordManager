@@ -112,21 +112,22 @@ class AccountHandler():
     def get_record(self, id, web, usern, eml):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
-
         acc_id = int(id)
-        website = web
-        user = usern
-        email = eml
+        params = {'id': acc_id, 'web': web, 'username': usern, 'email':eml}
+        LogHandler.info_log(self, function_name, 'params: ', params)
+
+
 
         query = "SELECT * FROM record WHERE account_id = %s AND website = %s AND username = %s AND email = %s"
-        args = (acc_id, website, user, email)
+        args = (acc_id, web, usern, eml)
 
         
         try:
             
-            
             rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, args)
 
+            LogHandler.info_log(self, function_name, 'rows returned: ', rows)
+            
             q_id = (rows[0])[0]
             q_ac_id = (rows[0])[1]
             q_web = (rows[0])[2]
@@ -151,7 +152,7 @@ class AccountHandler():
 
         acc_id = id
         query = ("SELECT * FROM record WHERE account_id = %s")
-        args = acc_id
+        args = (acc_id,)
         records = []
 
         try:
@@ -306,7 +307,7 @@ class AccountHandler():
 
         try:
             
-            rows =  DatabaseHandler.query_database_with_params(self, 'Enc', query, acc_id)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Enc', query, (acc_id,))
             
             LogHandler.info_log(self, function_name, 'enc key: ', rows)
             
@@ -481,7 +482,7 @@ class AccountHandler():
         
         try:
             
-            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, qusername)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, (qusername,))
             query_id = str((rows[0])[0])
             query_username = str((rows[0])[1])
             query_email = str((rows[0])[2])
@@ -520,7 +521,7 @@ class AccountHandler():
 
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, 'Main', username_query, str(usern))
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', username_query, (str(usern),))
             q_rec_id = rows[0]
             DatabaseHandler.update(self, 'Main', email_query, (new_eml, q_rec_id))
             
@@ -539,7 +540,7 @@ class AccountHandler():
  
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, 'Main', username_query, str(usern))
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', username_query, (str(usern),))
             q_rec_id = rows[0]
             DatabaseHandler.update(self, 'Main', password_query, (new_passw, q_rec_id))
 

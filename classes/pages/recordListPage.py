@@ -106,8 +106,14 @@ class RecordListPage(tk.Frame): # Sub-lcassing tk.Frame
             q_username = record[1]
             q_email = record[2]
             record_id = acc.get_record(acc_id, q_website, q_username, q_email)
-            master.get_record_id(record_id[0])
-            master.get_account_id(record_id[1])
+            
+            LogHandler.debug_log(self, function_name, 'record_id: ', record_id)
+            rec_id = record_id[0]
+            ac_id = record_id[1]
+            
+            LogHandler.debug_log(self, function_name, f'rec_id: {rec_id} and ac_id: {ac_id}', '')
+            master.get_record_id(rec_id)
+            master.get_account_id(ac_id)
             master.switch_Canvas(StaticVariables.RECORD_TILE_PAGE)
         
             

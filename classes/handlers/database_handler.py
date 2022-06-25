@@ -250,14 +250,14 @@ class DatabaseHandler():
         main_query = query
         main_args = args
         
-        LogHandler.info_log(self, function_name, 'args: ', (main_args,))
+        LogHandler.info_log(self, function_name, 'args: ', main_args)
         
         conn = connection_data['connection']
         cur = conn.cursor()
         
         try:
             
-            cur.execute(main_query, (main_args,))
+            cur.execute(main_query, main_args)
             rows = cur.fetchall()
 
             LogHandler.info_log(self, function_name, 'rows: ', rows)

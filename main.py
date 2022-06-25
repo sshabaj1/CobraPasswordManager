@@ -58,7 +58,7 @@ class SampleApp(tk.Tk):
 
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, qid)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, (qid,))
             idi = (rows[0])[0]
             usrn = (rows[0])[1]
             eml = (rows[0])[2]
