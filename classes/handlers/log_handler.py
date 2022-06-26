@@ -15,12 +15,13 @@ class LogHandler():
         today = date.today()
         log_dir = today.strftime("%d-%m-%Y")
         DirectoryHandler.mkdir_today(self, 'logs')
-        num_of_frames = (len(os.listdir(f'./logs/{log_dir}')) + 1)
+        num_of_frames = (len(os.listdir(f'logs/{log_dir}')) + 1)
         log_path = f'logs/{log_dir}//LOG{num_of_frames}.log'
         logging.basicConfig(filename=log_path, filemode='w',format= '%(asctime)s - %(levelname)s - %(message)s')
 
 
     def debug_log(self, function_name, context_name,context):
+        print('enterd at debug log') 
         logger=logging.getLogger()
         logger.setLevel(logging.DEBUG)
         frameinfo = getframeinfo(currentframe())

@@ -23,7 +23,7 @@ class ChangeEmailPage(tk.Canvas):
         self.canvas = tk.Canvas(self , bg = 'red', width = 345,height = 518)
         self.canvas.pack(fill = "both", expand = True)
         app.title(StaticVariables.CHANGE_EMAIL)
-        app.iconbitmap(StaticVariables.COBRA_LOGO_PATH)
+        app.iconbitmap(StaticVariables.COBRA_ICON_PATH)
         acc_id = app.set_account_id()
 
         
@@ -45,12 +45,12 @@ class ChangeEmailPage(tk.Canvas):
         
         
         self.email_logo = tk.PhotoImage(file=StaticVariables.EMAIL_LOGO_PATH)
-        old_email_logo = self.canvas.create_image(90, 190, image = self.email_logo, anchor=NW)
-        new_email_logo = self.canvas.create_image(90, 220, image = self.email_logo, anchor=NW)
-        confirm_email_logo = self.canvas.create_image(90, 250, image = self.email_logo, anchor=NW)
+        old_email_logo = self.canvas.create_image(90, 190, image = self.email_logo, anchor=tk.NW)
+        new_email_logo = self.canvas.create_image(90, 220, image = self.email_logo, anchor=tk.NW)
+        confirm_email_logo = self.canvas.create_image(90, 250, image = self.email_logo, anchor=tk.NW)
         
         self.otp_logo = tk.PhotoImage(file=StaticVariables.OTP_LOGO_PATH)
-        otp_image = self.canvas.create_image(90, 280, image = self.otp_logo, anchor=NW)
+        otp_image = self.canvas.create_image(90, 280, image = self.otp_logo, anchor=tk.NW)
         
         
         self.back_logo = tk.PhotoImage(file=StaticVariables.BACK_LOGO_PATH)
@@ -111,7 +111,7 @@ class ChangeEmailPage(tk.Canvas):
                                 
         
         self.small_cobra_logo = tk.PhotoImage(file = StaticVariables.SMALL_COBRA_LOGO_PATH)
-        small_logo_image = self.canvas.create_image(130, 450, image = self.small_cobra_logo, anchor=NW)
+        small_logo_image = self.canvas.create_image(130, 450, image = self.small_cobra_logo, anchor=tk.NW)
         
         change_email_button = tk.Button( self, image=self.next_logo, borderwidth=0, bg='red', command=handle_change_email)
         change_email_button_canvas = self.canvas.create_window( 160, 350, anchor = "nw",window = change_email_button)

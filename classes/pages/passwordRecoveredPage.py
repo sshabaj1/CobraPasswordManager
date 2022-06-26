@@ -23,7 +23,7 @@ class PasswordRecoveredPage(tk.Canvas):
         self.canvas = tk.Canvas(self , bg = 'red', width = 345,height = 518)
         self.canvas.pack(fill = "both", expand = True)
         app.title(StaticVariables.PASSWORD_SET)
-        app.iconbitmap(StaticVariables.COBRA_LOGO_PATH)
+        app.iconbitmap(StaticVariables.COBRA_ICON_PATH)
         print(StaticVariables.PASSW_RECOVERED_PAGE)
         self.login_logo = tk.PhotoImage(file =StaticVariables.LOGIN_LOGO_PATH)
         
@@ -31,7 +31,7 @@ class PasswordRecoveredPage(tk.Canvas):
         website_canvas = self.canvas.create_window( 30, 150, anchor = "nw",window = website_label)
         
         self.small_cobra_logo = tk.PhotoImage(file =StaticVariables.SMALL_COBRA_LOGO_PATH)
-        small_logo_image = self.canvas.create_image(130, 450, image = self.small_cobra_logo, anchor=NW)
+        small_logo_image = self.canvas.create_image(130, 450, image = self.small_cobra_logo, anchor=tk.NW)
         
         go_to_login_button = tk.Button( self, image = self.login_logo, borderwidth=0,  bg='red', command=lambda: app.switch_Canvas(StaticVariables.LOGIN_PAGE))
         go_to_login_button_canvas = self.canvas.create_window( 155, 300, anchor = "nw",window = go_to_login_button)

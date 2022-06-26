@@ -12,18 +12,12 @@ class EmailHandler():
     def send_email(self, email, msg):
         function_name = sys._getframe().f_code.co_name
         LogHandler.debug_log(self, function_name, '', '')
-        port = 587
-        smtp_server = Configuration.EMAIL_SMTP_SERVER
-        sender_email = Configuration.COBRA_EMAIL
-        receiver_email = email
-        password = Configuration.EMAIL_PASSWORD
-        message = msg
         
         context = ssl.create_default_context()
-        with smtplib.SMTP(smtp_server, port) as server:
+        with smtplib.SMTP(Configuration.EMAIL_SMTP_SERVER, Configuration.EMAIL_PORT) as server:
             server.ehlo()
             server.starttls(context=context)
             server.ehlo()
-            server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, message)
-        LogHandler.debug_log(self, function_name, 'Email Sent', '')
+            server.login(Configuration.COBRA_EMAIL, Configuration.EMAIL_PASSWORD)
+            server.sendmail(Configuration.COBRA_EMAIL, email, msg)
+            LogHandler.debug_log(self, function_name, 'Email Sent', msg)

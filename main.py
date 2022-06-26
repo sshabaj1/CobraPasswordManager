@@ -2,8 +2,24 @@ from classes.handlers.log_handler import LogHandler
 from classes.handlers.database_handler import DatabaseHandler
 from classes.handlers.email_handler import EmailHandler
 
-from classes.utilities.static_variables import StaticVariables
+from classes.pages.accountPage import AccountPage
+from classes.pages.accountVerifiedPage import AccountVerifiedPage
+from classes.pages.addRecordPage import AddRecordPage
+from classes.pages.changeEmailPage import ChangeEmailPage
+from classes.pages.changePasswordPage import ChangePasswordPage
+from classes.pages.editRecordPage import EditRecordPage
+from classes.pages.landingPage import LandingPage
+from classes.pages.passwordRecoveredPage import PasswordRecoveredPage
+from classes.pages.recordListPage import RecordListPage
+from classes.pages.recordTilePage import RecordTilePage
+from classes.pages.recoverPasswordPage import RecoverPasswordPage
+from classes.pages.registerPage import RegisterPage
+from classes.pages.setNewPasswordPage import SetNewPasswordPage
+from classes.pages.verifyMailPage import VerifyMailPage
+from classes.pages.loginPage import LoginPage
+from classes.pages.accountVerifiedPage import AccountVerifiedPage
 
+from classes.utilities.static_variables import StaticVariables
 
 import tkinter as tk
 import secrets
@@ -32,19 +48,17 @@ class SampleApp(tk.Tk):
             self._Canvas.destroy()
         self._Canvas = new_Canvas
         self._Canvas.pack()
-    account_id = ''
+
     
     def query_account(self, qid):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        query = "SELECT * FROM account WHERE id = '%s'"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+        query = "SELECT * FROM account WHERE id = %s"
+
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, qid)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, (qid,))
             idi = (rows[0])[0]
             usrn = (rows[0])[1]
             eml = (rows[0])[2]
@@ -53,19 +67,13 @@ class SampleApp(tk.Tk):
             credetials = [idi, usrn, eml, passwr]
             
             LogHandler.info_log(self, function_name, 'credetials: ', credetials)
-            
-            cur.close()
-            conn.close()
-            
+
             return credetials
         
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
+
                 
                 
     def create_otp_recover_password(self):
@@ -100,13 +108,11 @@ class SampleApp(tk.Tk):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        query = "SELECT * FROM account WHERE username = '%s'"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+        query = "SELECT * FROM account WHERE username = %s"
+
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, user)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, user)
             idi = (rows[0])[0]
             usrn = (rows[0])[1]
             eml = (rows[0])[2]
@@ -116,18 +122,10 @@ class SampleApp(tk.Tk):
             
             LogHandler.info_log(self, function_name, 'credentials', credetials)
             
-            cur.close()
-            conn.close()
-            
             return credetials
         
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
-        
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
     
     
     def get_account_username(self, username):
@@ -184,4 +182,8 @@ class SampleApp(tk.Tk):
 
 if __name__ == "__main__":
     app = SampleApp()
+    DatabaseHandler.create_account_table(app)
+    DatabaseHandler.create_record_table(app)
+    DatabaseHandler.create_keyHolder_table(app)
+    LogHandler.create_log_file(app)
     app.mainloop()

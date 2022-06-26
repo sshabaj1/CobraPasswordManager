@@ -5,6 +5,7 @@ from classes.handlers.log_handler import LogHandler
 from classes.utilities.static_variables import StaticVariables
 
 import tkinter as tk
+from tkinter import StringVar
 import sys
 
 

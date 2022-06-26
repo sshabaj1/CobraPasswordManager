@@ -8,6 +8,8 @@ from classes.utilities.static_variables import StaticVariables
 import tkinter as tk
 import secrets
 import string
+from tkinter import StringVar
+
 import sys
 
 
@@ -35,7 +37,7 @@ class AddRecordPage(tk.Frame): # Sub-lcassing tk.Frame
         ac_mail = acc_data[2]
         ac_passw = acc_data[3]
         acc = AccountHandler(ac_usr, ac_mail, ac_passw)
-        records = acc.query_records(acc_id)
+        records = acc.query_records_by_account_id(acc_id)
         generated_password = StringVar()
         
         

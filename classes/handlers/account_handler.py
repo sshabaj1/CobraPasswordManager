@@ -26,64 +26,54 @@ class AccountHandler():
 
         usrname = self.username
         eml = self.email
-        key = EncryptionHandler.generate_encryption_key()
+        key = EncryptionHandler.generate_encryption_key(self)
         raw_password = self.password
-        byte_password = EncryptionHandler.encrypt(raw_password, key)
+        byte_password = EncryptionHandler.encrypt(self, raw_password, key)
         passw = byte_password.decode(StaticVariables.UTF_8)
-        dublicate_query = 'SELECT * FROM account WHERE usermane = %s'
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+        dublicate_query = 'SELECT * FROM account WHERE username = %s'
+        
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, dublicate_query, usrname)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', dublicate_query, (usrname,))
             if len(rows) > 0:
                 account_created = {"status" : False}
                 return account_created
             else:
-                acc_id = AccountHandler.create_account_id()
+                acc_id = AccountHandler.create_account_id(self)
                 insert_script = 'INSERT INTO account (id, username, email, password) VALUES ( %s, %s, %s, %s)'
                 insert_values = (acc_id, usrname, eml, passw)
-                DatabaseHandler.insert(self, conn, cur, insert_script, insert_values)
-                conn.commit()
-                cur.close()
-                conn.close()
+                DatabaseHandler.insert(self, 'Main', insert_script, insert_values)
+
                 account_created = {"status" : True, 'acc_id': acc_id}
+                self.insert_encrypted_key(key, acc_id)
                 return account_created
         
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
+
 
     def create_account_id(self):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
 
-        query = "SELECT id FROM account ORDER BY id desc LIMIT 1"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+        query = ("SELECT id FROM account ORDER BY id desc LIMIT 1")
+        acc_id = ''
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query)
-            cur.close()
-            conn.close()
+            rows =  DatabaseHandler.query_database_without_params(self, 'Main', query)
+            
+            LogHandler.info_log(self, function_name, 'last acc id: ', rows)
+            
             if len(rows) > 0:
                 query_id = str((rows[0])[0])
                 acc_id = 1 + int(query_id)
                 return acc_id
             else:
-                acc_id
+                acc_id = 1
                 return acc_id
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
+
      
      
                 
@@ -95,12 +85,9 @@ class AccountHandler():
         q_account_id = acc_id
         query = "SELECT * FROM record WHERE account_id = %s AND id = %s"
         args = (q_account_id, q_record_id)
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, args)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, args)
             
             LogHandler.info_log(self, function_name, 'rows: ', rows)
 
@@ -112,43 +99,35 @@ class AccountHandler():
             record = [q_web, q_usern, q_mail, q_passw]
 
             LogHandler.info_log(self, function_name, 'Record Returned Query:  ', record)
-            
-            cur.close()
-            conn.close()
-            
+
             return record
         
         except Exception as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
             
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
+
 
 
         
     def get_record(self, id, web, usern, eml):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
-
         acc_id = int(id)
-        website = web
-        user = usern
-        email = eml
+        params = {'id': acc_id, 'web': web, 'username': usern, 'email':eml}
+        LogHandler.info_log(self, function_name, 'params: ', params)
 
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+
+
         query = "SELECT * FROM record WHERE account_id = %s AND website = %s AND username = %s AND email = %s"
-        args = (acc_id, website, user, email)
+        args = (acc_id, web, usern, eml)
 
         
         try:
             
-            
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, args)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, args)
 
+            LogHandler.info_log(self, function_name, 'rows returned: ', rows)
+            
             q_id = (rows[0])[0]
             q_ac_id = (rows[0])[1]
             q_web = (rows[0])[2]
@@ -159,18 +138,11 @@ class AccountHandler():
             record_returned = [q_id, q_ac_id, q_web, q_usern, q_mail, q_passw]
             LogHandler.info_log(self, function_name, 'record_returned: ', record_returned)
             
-                    
-            cur.close()
-            conn.close()
             return record_returned
 
         except Exception as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
             
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
 
 
     
@@ -180,17 +152,13 @@ class AccountHandler():
 
         acc_id = id
         query = ("SELECT * FROM record WHERE account_id = %s")
-        args = acc_id
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+        args = (acc_id,)
         records = []
 
         try:
             
-            
-            
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, args)
+
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, args)
 
             LogHandler.debug_log(self, function_name, 'rows lenght', len(rows))
 
@@ -231,21 +199,13 @@ class AccountHandler():
 
                     records.append(list_obj)
 
-            
-    
-    
-            cur.close()
-            conn.close()
+
 
             return records
 
         except Exception as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
             
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
 
 
     
@@ -291,7 +251,7 @@ class AccountHandler():
 
         q_key = self.query_encryption_key(self.id)
         key = q_key[2]
-        acc_password = EncryptionHandler.decrypt(key, self.password)
+        acc_password = EncryptionHandler.decrypt(self, key, self.password)
         old_password = passw
         if acc_password == old_password:
 
@@ -304,28 +264,21 @@ class AccountHandler():
 
         status = ''
         query = "select * from account where username = %s"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
         
-        
+
         try:
             
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, self.username)
-            status = (rows[5])
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, (self.username,))
+            LogHandler.info_log(self, function_name, 'rows--: ', rows)
+            status = ((rows[0])[5])
 
-            cur.close()
-            conn.close()
-
+    
             return status
         
         except Exception as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
             
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
+        
 
 
     def confirm_account(self):
@@ -333,24 +286,14 @@ class AccountHandler():
         LogHandler.info_log(self, function_name, '', '')
 
         query = "Update account set status = %s where username = %s"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
 
         try:
-            DatabaseHandler.update(self, conn, cur, query, ('Verified', self.username))
+            DatabaseHandler.update(self, 'Main', query, ('Verified', self.username))
 
-            cur.commit()
-            cur.close()
-            conn.close()
 
         except Exception as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
             
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
 
 
     
@@ -359,35 +302,28 @@ class AccountHandler():
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        connection_dict = DatabaseHandler.connect_enc_database(self)
-        query = "SELECT * FROM keyHolder WHERE account_id = '%s'"
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+ 
+        query = "SELECT * FROM keyHolder WHERE account_id = %s"
 
         try:
             
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, acc_id)
-            q_id = (rows[0])[0]
-            q_ac_id = (rows[0])[1]
+            rows =  DatabaseHandler.query_database_with_params(self, 'Enc', query, (acc_id,))
+            
+            LogHandler.info_log(self, function_name, 'enc key: ', rows)
+            
+            q_id = int((rows[0])[0])
+            q_ac_id = int((rows[0])[1])
             q_key = (rows[0])[2]
             
             record = [q_id, q_ac_id, q_key]
             
             LogHandler.debug_log(self, function_name, 'record: ', record)
             
-                    
-            cur.close()
-            conn.close()
-            
             return record
         
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
                 
                 
                 
@@ -395,13 +331,10 @@ class AccountHandler():
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        connection_dict = DatabaseHandler.connect_enc_database(self)
         query = "SELECT * FROM keyHolder ORDER BY id DESC LIMIT 1"
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
         
         try:
-            rows =  DatabaseHandler.query_database_without_params(self, conn, cur, query)
+            rows =  DatabaseHandler.query_database_without_params(self, 'Enc', query)
 
             if len(rows) > 0:
                 q_id = (rows[0])[0]
@@ -410,19 +343,12 @@ class AccountHandler():
                 record_id = 1
             
             LogHandler.info_log(self, function_name, 'Record id: ', record_id)
-                    
-            cur.close()
-            conn.close()
             
             return record_id
         
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
                 
                 
     
@@ -436,25 +362,15 @@ class AccountHandler():
         
         query = 'INSERT INTO keyHolder (id, account_id, key) VALUES (%s,%s, %s)'
         args = (id, account_id, key)
-        connection_dict = DatabaseHandler.connect_enc_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+        LogHandler.info_log(self, function_name, 'values to insert', args)
         
         try:
             
-            DatabaseHandler.insert(self, conn, cur, query, args)
+            DatabaseHandler.insert(self, 'Enc', query, args)
             
-            conn.commit()   
-            cur.close()
-            conn.close()
 
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
-        
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
                 
                 
     
@@ -462,28 +378,18 @@ class AccountHandler():
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        query = "SELECT otp FROM account WHERE username = '%s'"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+        query = "SELECT otp FROM account WHERE username = %s"
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, self.username)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, (self.username,))
             otp = str((rows[0])[0])
 
-            
-            cur.close()
-            conn.close()
-            
+
             return otp
 
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
-        
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
+
                 
                 
     
@@ -502,27 +408,17 @@ class AccountHandler():
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        q_otp = OtpHandler.create_otp()
+        q_otp = OtpHandler.create_otp(self, 6)
         query = "Update account set otp = %s where username = %s"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
 
         try:
             
-            DatabaseHandler.update(self, conn, cur, query, (q_otp, self.username))
-            
-            conn.commit()
-            cur.close()
-            conn.close()
+            DatabaseHandler.update(self, 'Main', query, (q_otp, self.username))
+
 
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
                 
                 
                 
@@ -581,22 +477,23 @@ class AccountHandler():
         LogHandler.info_log(self, function_name, '', '')
         
         
-        query = "SELECT * FROM account WHERE username = '%s'"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+        query = "SELECT * FROM account WHERE username = %s"
+        
         
         try:
             
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, query, str(qusername))
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', query, (qusername,))
             query_id = str((rows[0])[0])
             query_username = str((rows[0])[1])
             query_email = str((rows[0])[2])
             q_password = str((rows[0])[3])
+            
+            LogHandler.info_log(self, function_name, 'credentials: ', rows)
+            
             query_password = bytes(q_password, StaticVariables.UTF_8)
             q_key = self.query_encryption_key(query_id)
             key = q_key[2]
-            raw_password = EncryptionHandler.decrypt(key, query_password)
+            raw_password = EncryptionHandler.decrypt(self, key, query_password)
             credentials = {'id' : query_id,
                            'username' : query_username,
                            'email' : query_email,
@@ -605,46 +502,32 @@ class AccountHandler():
             
             LogHandler.debug_log(self, function_name, 'credentials: ', credentials)
 
-            cur.close()
-            conn.close()
+
             
             return credentials
 
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
+
                 
                 
     def insert_new_email(self, usern, new_eml):
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        username_query = "SELECT * FROM account WHERE username = '%s'"
+        username_query = "SELECT * FROM account WHERE username = %s"
         email_query = "Update account set email = %s where id = %s"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, username_query, str(usern))
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', username_query, (str(usern),))
             q_rec_id = rows[0]
-            DatabaseHandler.update(self, conn, cur, email_query, (new_eml, q_rec_id))
-
-            conn.commit()
-            cur.close()
-            conn.close()
+            DatabaseHandler.update(self, 'Main', email_query, (new_eml, q_rec_id))
             
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
                 
                 
     
@@ -652,28 +535,19 @@ class AccountHandler():
         function_name = sys._getframe().f_code.co_name
         LogHandler.info_log(self, function_name, '', '')
         
-        username_query = "SELECT * FROM account WHERE username = '%s'"
+        username_query = "SELECT * FROM account WHERE username = %s"
         password_query = "Update account set password = %s where id = %s"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+ 
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, conn, cur, username_query, str(usern))
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', username_query, (str(usern),))
             q_rec_id = rows[0]
-            DatabaseHandler.update(self, conn, cur, password_query, (new_passw, q_rec_id))
+            DatabaseHandler.update(self, 'Main', password_query, (new_passw, q_rec_id))
 
-            conn.commit()
-            cur.close()
-            conn.close()
             
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
                 
                 
     
@@ -747,25 +621,17 @@ class AccountHandler():
         q_password = byte_password.decode(StaticVariables.UTF_8) 
         
         query = "Update account set password = %s where id = %s"
-        connection_dict = DatabaseHandler.connect_main_database(self)
-        conn = connection_dict['connection']
-        cur = connection_dict['cursor']
+
         
         try:
             
-            DatabaseHandler.update(self, conn, cur, query, (q_password, acc_id))
+            DatabaseHandler.update(self, 'Main', query, (q_password, acc_id))
 
-            conn.commit()
-            cur.close()
-            conn.close()
             
         except (Exception, psycopg2.DatabaseError) as db_error:
             LogHandler.critical_log(self, function_name, 'Database Error: ', db_error)
         
-        finally:
-            if conn is not None:
-                cur.close()
-                conn.close()
+
         
 
 

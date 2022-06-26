@@ -24,6 +24,7 @@ class StaticVariables():
     L_PASSW_STRING = 'password'
     WRONG_EML_STRING = 'Wrong Email'
     WRONG_USR_STRING = 'Wrong Username'
+    VERIFIED_STRING = 'Verified'
     
 
     
@@ -39,6 +40,11 @@ class StaticVariables():
     ADD_RECORD_PAGE = 'AddRecordPage'
     EDIT_RECORD_PAGE = 'EditRecordPage'
     SET_NEW_PASSW_PAGE = 'SetNewPasswordPage'
+    VERIFY_MAIL_PAGE = 'VerifyMailPage'
+    PASSW_RECOVERED_PAGE = 'PasswordRecoveredPage'
+    ACCOUNT_VERIFIED_PAGE = 'AccountVerifiedPage'
+    REGISTER_PAGE = 'RegisterPage'
+    RECOVER_PASSW_PAGE = 'RecoverPasswordPage'
 
 
     # PAGE TITLES
@@ -50,13 +56,17 @@ class StaticVariables():
     CHANGE_PASSWORD = "Change Password"
     COBRA_PASSW_MANAGER = "Cobra Password Manager"
     RECOVER_PASSWORD = "Recover Password"
+    REGISTER = "Register"
+    SET_PASSWORD = "Set Password"
+    VERIFY_YOUR_EML = "Verify Your Email Address"
     
     # PATHS
     BACK_LOGO_PATH = './static/back_logo.png'
     EMAIL_LOGO_PATH = './static/email_logo.png'
     PASSWORD_LOGO_PATH = './static/password_logo.png'
     SMALL_COBRA_LOGO_PATH = './static/small_cobra_logo.png'
-    COBRA_LOGO_PATH = r'./static/cobra_logo.ico'
+    COBRA_LOGO_PATH = './static/cobra_logo.png'
+    COBRA_ICON_PATH = './static/cobra_logo.ico'
     LOGIN_LOGO_PATH = './static/login_logo.png'
     USERNAME_LOGO_PATH = f'./static/user_logo.png'
     WEBSITE_LOGO_PATH = './static/website_logo.png'
@@ -71,6 +81,8 @@ class StaticVariables():
     ADD_RECORD_LOGO_PATH = './static/add_record_logo.png'
     COPY_LOGO_PATH = './static/copy_logo.png'
     EDIT_LOGO_PATH = './static/edit_logo.png'
+    ERROR_LOGO_PATH = f'./static/error_logo.png'
+    REGISTER_LOGO_PATH = './static/register_logo.png'
     
     
     # PAGE TEXT
@@ -88,4 +100,18 @@ class StaticVariables():
     PASSW_RECOVERED_SUCCESFULLY = 'Password recovered succesfully. Please login to continue. '
     COPIED = 'Copied'
     ENTER_USR_EML_TO_RECOVER_PASSW = 'Please enter your username and email to recover the password'
-
+    WELLCOME_MESSAGE ='Wellcome, few steps await to become a member'
+    ENTER_CREDENCIALS = 'Enter the credencials and then click next to go to the next step'
+    PLEASE_WAIT = 'Please wait ...'
+    PASSWORD_SHORT_ERROR = 'Password must contain at least 8 chars!'
+    EMAIL_SHORT_ERROR = 'Email must contain at least 10 chars!'
+    USERNAME_SHORT_ERROR = 'Esername must contain atleast 6 chars!'
+    ENTER_NEW_PASSW = 'Enter your new password'
+    WRONG_CODE_ERROR = '''Wrong Code! Please Try Again'''
+    WRONG_PASSWORD_ERROR = '''Passwords don\'t match! Please Try Again'''
+    INSERT_CODE_VERIFY_MAIL = 'Please insert the code that you recived on your email'
+    USERNAME_NOT_FOUND = '''    Username does not exist. 
+            Please try again or create an account'''
+    WRONG_PASSW = '''Wrong password! Please Try Again'''
+    FORGOT_PASSW_BUTTON = "Forgot Password ?"
+    SING_UP_BUTTON = 'Not a member? Sing Up below'
