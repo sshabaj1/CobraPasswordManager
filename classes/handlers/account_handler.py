@@ -33,7 +33,7 @@ class AccountHandler():
         dublicate_query = 'SELECT * FROM account WHERE username = %s'
         
         try:
-            rows =  DatabaseHandler.query_database_with_params(self, 'Main', dublicate_query, usrname)
+            rows =  DatabaseHandler.query_database_with_params(self, 'Main', dublicate_query, (usrname,))
             if len(rows) > 0:
                 account_created = {"status" : False}
                 return account_created
